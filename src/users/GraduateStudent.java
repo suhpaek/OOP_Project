@@ -1,4 +1,4 @@
 package users;
 
-public class GraduateStudent {
+public class GraduateStudent extends Student{
 }
