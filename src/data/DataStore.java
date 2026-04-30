@@ -1,5 +1,9 @@
 package data;
 
+import communication.News;
+import enums.NewsType;
+import research.ResearchPaper;
+import research.Researcher;
 import support.ActionLog;
 import users.Student;
 import users.User;
@@ -15,6 +19,7 @@ public class DataStore {
 
     private final List<User> users = new ArrayList<>();
     private final List<ActionLog> logs = new ArrayList<>();
+    private final List<News> news = new ArrayList<>();
 
     private DataStore() {
     }
@@ -78,14 +83,36 @@ public class DataStore {
         return new ArrayList<>(logs);
     }
 
+    public void addNews(News newsItem) {
+        news.add(newsItem);
+    }
+
+    public List<News> getNews() {
+        return new ArrayList<>(news);
+    }
+
+    public void publishResearchPaper(Researcher researcher, ResearchPaper paper) {
+        researcher.publishPaper(paper);
+    }
+
+    public News createTopCitedResearcherNews(List<Researcher> researchers) {
+        Researcher topResearcher = Researcher.getTopCitedResearcher(researchers);
+        if (topResearcher == null) return null;
+        News newsItem = new News(
+                Math.abs(("top-cited-" + topResearcher.getId()).hashCode()),
+                "Top cited researcher",
+                topResearcher.getName() + " has " + topResearcher.getTotalCitations() + " citations",
+                NewsType.RESEARCH
+        );
+        addNews(newsItem);
+        return newsItem;
+    }
+
     public void save() throws IOException {
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(DEFAULT_FILE))) {
             outputStream.writeObject(users);
-            List<String> serializedLogs = new ArrayList<>();
-            for (ActionLog log : logs) {
-                serializedLogs.add(log.getCreatedAt() + " | " + log.getActorId() + " | " + log.getAction());
-            }
-            outputStream.writeObject(serializedLogs);
+            outputStream.writeObject(logs);
+            outputStream.writeObject(news);
         }
     }
 
@@ -99,12 +126,10 @@ public class DataStore {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
             users.clear();
             logs.clear();
+            news.clear();
             users.addAll((List<User>) inputStream.readObject());
-            List<String> serializedLogs = (List<String>) inputStream.readObject();
-            int index = 0;
-            for (String logLine : serializedLogs) {
-                logs.add(new ActionLog("log-" + index++, "system", logLine));
-            }
+            logs.addAll((List<ActionLog>) inputStream.readObject());
+            news.addAll((List<News>) inputStream.readObject());
         }
     }
 }

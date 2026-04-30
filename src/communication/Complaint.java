@@ -2,9 +2,10 @@ package communication;
 
 import enums.UrgencyLevel;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Complaint {
+public class Complaint implements Serializable {
     private int id;
     private String text;
     private UrgencyLevel urgency;

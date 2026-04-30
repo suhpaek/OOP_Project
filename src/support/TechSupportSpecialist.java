@@ -2,10 +2,11 @@ package support;
 
 import enums.RequestStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TechSupportSpecialist {
+public class TechSupportSpecialist implements Serializable {
     private String id;
     private String fullName;
     private List<TechSupportRequest> requests;
@@ -17,7 +18,14 @@ public class TechSupportSpecialist {
     }
 
     public List<TechSupportRequest> viewNewRequests() {
-        return requests;
+        List<TechSupportRequest> newRequests = new ArrayList<>();
+        for (TechSupportRequest request : requests) {
+            if (request.getStatus() == RequestStatus.NEW) {
+                request.markViewed();
+                newRequests.add(request);
+            }
+        }
+        return newRequests;
     }
 
     public void acceptRequest(TechSupportRequest request) {
@@ -25,15 +33,14 @@ public class TechSupportSpecialist {
     }
 
     public void rejectRequest(TechSupportRequest request) {
-        request.setStatus(RequestStatus.DECLINED);
+        request.setStatus(RequestStatus.REJECTED);
     }
 
     public void completeRequest(TechSupportRequest request) {
-        request.setStatus(RequestStatus.ACCEPTED);
+        request.setStatus(RequestStatus.DONE);
     }
 
     public void addRequest(TechSupportRequest request) {
         requests.add(request);
     }
 }
-

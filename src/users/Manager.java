@@ -26,7 +26,7 @@ public class Manager extends Employee {
         return managerType;
     }
 
-    public void setManagerType(ManagerType managerType) {
+    void setManagerTypeByAdmin(ManagerType managerType) {
         this.managerType = managerType;
     }
 

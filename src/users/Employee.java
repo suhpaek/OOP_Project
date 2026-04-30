@@ -22,7 +22,7 @@ public class Employee extends User {
         return salary;
     }
 
-    public void setSalary(double salary) {
+    void setSalaryByAdmin(double salary) {
         this.salary = salary;
     }
 

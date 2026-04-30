@@ -2,9 +2,10 @@ package support;
 
 import enums.RequestStatus;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TechSupportRequest {
+public class TechSupportRequest implements Serializable {
     private String id;
     private String title;
     private String description;
@@ -21,7 +22,7 @@ public class TechSupportRequest {
     }
 
     public void markViewed() {
-        this.status = RequestStatus.IN_PROCESS;
+        this.status = RequestStatus.VIEWED;
         this.viewedAt = LocalDateTime.now();
     }
 
@@ -33,7 +34,7 @@ public class TechSupportRequest {
         return status;
     }
 
-    public void setStatus(RequestStatus status) {
+    void setStatus(RequestStatus status) {
         this.status = status;
     }
 }

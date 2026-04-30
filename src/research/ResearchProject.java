@@ -2,10 +2,11 @@ package research;
 
 import exceptions.NonResearcherJoinProjectException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResearchProject {
+public class ResearchProject implements Serializable {
     private String topic;
     private List<Researcher> participants;
     private List<ResearchPaper> publishedPapers;
@@ -20,7 +21,10 @@ public class ResearchProject {
         if (!(person instanceof Researcher)) {
             throw new NonResearcherJoinProjectException("Only researchers can join project");
         }
-        participants.add((Researcher) person);
+        Researcher researcher = (Researcher) person;
+        if (!participants.contains(researcher)) {
+            participants.add(researcher);
+        }
     }
 
     public void addPaper(ResearchPaper paper) {
@@ -32,10 +36,10 @@ public class ResearchProject {
     }
 
     public List<Researcher> getParticipants() {
-        return participants;
+        return new ArrayList<>(participants);
     }
 
     public List<ResearchPaper> getPublishedPapers() {
-        return publishedPapers;
+        return new ArrayList<>(publishedPapers);
     }
 }

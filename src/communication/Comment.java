@@ -1,8 +1,9 @@
 package communication;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Comment {
+public class Comment implements Serializable {
     private int id;
     private String text;
     private LocalDateTime createdAt;

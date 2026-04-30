@@ -1,14 +1,17 @@
 package users;
 
 import enums.Degree;
+import exceptions.InvalidSupervisorException;
+import research.ResearchPaper;
+import research.Researcher;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GraduateStudent extends Student {
     private Degree degree;
-    private String researchSupervisorName;
-    private final List<String> diplomaProjects = new ArrayList<>();
+    private Researcher researchSupervisor;
+    private final List<ResearchPaper> diplomaProjects = new ArrayList<>();
 
     public GraduateStudent() {
         super();
@@ -23,23 +26,30 @@ public class GraduateStudent extends Student {
         return degree;
     }
 
-    public void setDegree(Degree degree) {
+    void setGraduateDegreeByAdmin(Degree degree) {
         this.degree = degree;
     }
 
     public String getResearchSupervisorName() {
-        return researchSupervisorName;
+        return researchSupervisor == null ? null : researchSupervisor.getName();
     }
 
-    public void setResearchSupervisorName(String researchSupervisorName) {
-        this.researchSupervisorName = researchSupervisorName;
+    public Researcher getResearchSupervisor() {
+        return researchSupervisor;
     }
 
-    public List<String> getDiplomaProjects() {
-        return diplomaProjects;
+    void setResearchSupervisorByAdmin(Researcher researchSupervisor) throws InvalidSupervisorException {
+        if (researchSupervisor != null && researchSupervisor.calculateHIndex() < 3) {
+            throw new InvalidSupervisorException(researchSupervisor.getName(), researchSupervisor.calculateHIndex());
+        }
+        this.researchSupervisor = researchSupervisor;
     }
 
-    public void addDiplomaProject(String paper) {
+    public List<ResearchPaper> getDiplomaProjects() {
+        return new ArrayList<>(diplomaProjects);
+    }
+
+    public void addDiplomaProject(ResearchPaper paper) {
         diplomaProjects.add(paper);
     }
 }

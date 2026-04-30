@@ -43,7 +43,7 @@ public class Student extends User {
         return degree;
     }
 
-    public void setDegree(Degree degree) {
+    void setDegreeByAdmin(Degree degree) {
         this.degree = degree;
     }
 
@@ -51,7 +51,7 @@ public class Student extends User {
         return school;
     }
 
-    public void setSchool(School school) {
+    void setSchoolByAdmin(School school) {
         this.school = school;
     }
 
@@ -86,6 +86,10 @@ public class Student extends User {
         if (registeredCourses.remove(course)) {
             course.dropStudent(this);
         }
+    }
+
+    public void rateTeacher(Teacher teacher, int rating) {
+        teacher.addRating(rating);
     }
 
     public void addMarkToTranscript(Course course, Mark mark) {

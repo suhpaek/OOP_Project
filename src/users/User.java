@@ -7,24 +7,36 @@ import enums.Language;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
 
 public abstract class User implements Serializable {
+    private static final Set<String> USED_IDS = ConcurrentHashMap.newKeySet();
     private String id;
     private String username;
     private String password;
-    protected String firstName;
-    protected String lastName;
+    private String firstName;
+    private String lastName;
     private Gender gender;
     private Date dateOfBirth;
     private String email;
     private Language language;
     private boolean isActive;
+    private transient boolean loggedIn;
 
     protected User() {
-        this.id = UUID.randomUUID().toString();
+        this.id = generateUniqueId();
         this.language = Language.EN;
         this.isActive = true;
+    }
+
+    private static String generateUniqueId() {
+        String newId;
+        do {
+            newId = UUID.randomUUID().toString();
+        } while (!USED_IDS.add(newId));
+        return newId;
     }
 
     protected User(String username, String password, String firstName, String lastName, String email) {
@@ -37,25 +49,42 @@ public abstract class User implements Serializable {
     }
 
     public boolean login(String username, String password) {
-        return isActive
+        loggedIn = isActive
                 && Objects.equals(this.username, username)
                 && Objects.equals(this.password, password);
+        return loggedIn;
     }
 
     public void logout() {
-        this.isActive = false;
+        loggedIn = false;
     }
 
-    public void updateEmail(String email) {
+    public final void updateEmail(String email) {
         this.email = email;
     }
 
-    public void selectLanguage(Language language) {
+    public final void selectLanguage(Language language) {
         this.language = language;
     }
 
-    public void changePassword(String password) {
+    public final void changePassword(String password) {
         this.password = password;
+    }
+
+    void updateProfileByAdmin(String username, String firstName, String lastName, Gender gender, Date dateOfBirth) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        setDateOfBirthByAdmin(dateOfBirth);
+    }
+
+    void setActiveByAdmin(boolean active) {
+        isActive = active;
+    }
+
+    private void setDateOfBirthByAdmin(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth == null ? null : new Date(dateOfBirth.getTime());
     }
 
     public Comment writeComment(String comment) {
@@ -70,10 +99,6 @@ public abstract class User implements Serializable {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -86,16 +111,8 @@ public abstract class User implements Serializable {
         return gender;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
     public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+        return dateOfBirth == null ? null : new Date(dateOfBirth.getTime());
     }
 
     public String getEmail() {
@@ -110,8 +127,8 @@ public abstract class User implements Serializable {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 
     public String getFullName() {

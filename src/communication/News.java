@@ -2,11 +2,12 @@ package communication;
 
 import enums.NewsType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class News {
+public class News implements Serializable {
     private int id;
     private String title;
     private String content;
@@ -57,4 +58,3 @@ public class News {
         return comments;
     }
 }
-

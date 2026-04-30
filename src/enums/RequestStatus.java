@@ -1,7 +1,9 @@
 package enums;
 
 public enum RequestStatus {
+    NEW,
+    VIEWED,
     ACCEPTED,
-    DECLINED,
-    IN_PROCESS
+    REJECTED,
+    DONE
 }

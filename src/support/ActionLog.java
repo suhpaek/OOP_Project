@@ -1,8 +1,9 @@
 package support;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ActionLog {
+public class ActionLog implements Serializable {
     private String id;
     private String actorId;
     private String action;
