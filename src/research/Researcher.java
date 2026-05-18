@@ -46,12 +46,22 @@ public class Researcher implements Serializable {
         ));
     }
 
+    public void addPaper(ResearchPaper paper) {
+        if (paper == null) return;
+        if (!papers.contains(paper)) papers.add(paper);
+        paper.addAuthor(this);
+    }
+
     public void joinProject(ResearchProject project) throws NonResearcherJoinProjectException {
         if (project == null) return;
         project.addParticipant(this);
         if (!projects.contains(project)) {
             projects.add(project);
         }
+    }
+
+    public void addProject(ResearchProject project) throws NonResearcherJoinProjectException {
+        joinProject(project);
     }
 
     public int calculateHIndex() {

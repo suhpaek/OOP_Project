@@ -34,7 +34,12 @@ public class TechSupportRequest implements Serializable {
         return status;
     }
 
-    void setStatus(RequestStatus status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
+
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getViewedAt() { return viewedAt; }
 }

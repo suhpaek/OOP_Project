@@ -34,6 +34,10 @@ public class GraduateStudent extends Student {
         this.graduateDegree = degree;
     }
 
+    public void setGraduateDegree(Degree degree) {
+        setGraduateDegreeByAdmin(degree);
+    }
+
     public Researcher getResearchSupervisor() {
         return researchSupervisor;
     }
@@ -54,6 +58,10 @@ public class GraduateStudent extends Student {
         if (hIndex < 3) {
             throw new InvalidSupervisorException(researchSupervisor.getName(), hIndex);
         }
+        this.researchSupervisor = researchSupervisor;
+    }
+
+    public void setResearchSupervisor(Researcher researchSupervisor) {
         this.researchSupervisor = researchSupervisor;
     }
 

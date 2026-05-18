@@ -79,8 +79,16 @@ public abstract class User implements Serializable {
         setDateOfBirthByAdmin(dateOfBirth);
     }
 
+    public void updateProfile(String username, String firstName, String lastName, Gender gender, Date dateOfBirth) {
+        updateProfileByAdmin(username, firstName, lastName, gender, dateOfBirth);
+    }
+
     void setActiveByAdmin(boolean active) {
         isActive = active;
+    }
+
+    public void setActive(boolean active) {
+        setActiveByAdmin(active);
     }
 
     private void setDateOfBirthByAdmin(Date dateOfBirth) {

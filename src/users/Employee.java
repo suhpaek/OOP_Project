@@ -26,6 +26,10 @@ public class Employee extends User {
         this.salary = salary;
     }
 
+    public void setSalary(double salary) {
+        setSalaryByAdmin(salary);
+    }
+
     public Message sendMessage(Employee receiver, String text) {
         Message message = new Message(UUID.randomUUID().toString(), getId(), receiver.getId(), text);
         sentMessages.add(message);

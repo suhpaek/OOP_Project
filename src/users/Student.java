@@ -51,6 +51,10 @@ public class Student extends User {
         this.degree = degree;
     }
 
+    public void setDegree(Degree degree) {
+        setDegreeByAdmin(degree);
+    }
+
     public School getSchool() {
         return school;
     }
@@ -59,8 +63,16 @@ public class Student extends User {
         this.school = school;
     }
 
+    public void setSchool(School school) {
+        setSchoolByAdmin(school);
+    }
+
     public int getFailedCoursesCount() {
         return failedCoursesCount;
+    }
+
+    public void setFailedCoursesCount(int failedCoursesCount) {
+        this.failedCoursesCount = Math.max(0, failedCoursesCount);
     }
 
     public int getCurrentCredits() {

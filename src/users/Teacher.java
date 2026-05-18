@@ -42,11 +42,23 @@ public class Teacher extends Employee {
         this.teacherType = teacherType;
     }
 
+    public void setTeacherType(TeacherType teacherType) {
+        setTeacherTypeByAdmin(teacherType);
+    }
+
     public void addRating(int rating) {
         if (rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Teacher rating must be between 1 and 5");
         }
         ratingMarks.add(rating);
+    }
+
+    public void addRatingMark(int rating) {
+        addRating(rating);
+    }
+
+    public List<Integer> getRatingMarks() {
+        return Collections.unmodifiableList(ratingMarks);
     }
 
     public double getAverageRating() {

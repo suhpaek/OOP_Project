@@ -5,6 +5,7 @@ import enums.NewsType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class News implements Serializable {
@@ -27,7 +28,7 @@ public class News implements Serializable {
     }
 
     public void addComment(Comment comment) {
-        comments.add(comment);
+        if (comment != null) comments.add(comment);
     }
 
     public int getId() {
@@ -55,6 +56,6 @@ public class News implements Serializable {
     }
 
     public List<Comment> getComments() {
-        return comments;
+        return Collections.unmodifiableList(comments);
     }
 }

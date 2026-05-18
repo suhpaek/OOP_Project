@@ -52,12 +52,20 @@ public class RegistrationRequest implements Serializable {
 
     public void approve(Manager manager) throws CreditLimitExceededException, TooManyFailedCoursesException {
         student.registerForCourse(course);
+        markApproved(manager);
+    }
+
+    public void markApproved(Manager manager) {
         this.approved = true;
         this.processed = true;
         this.processedBy = manager;
     }
 
     public void reject(Manager manager) {
+        markRejected(manager);
+    }
+
+    public void markRejected(Manager manager) {
         this.approved = false;
         this.processed = true;
         this.processedBy = manager;

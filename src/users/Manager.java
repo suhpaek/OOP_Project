@@ -32,6 +32,10 @@ public class Manager extends Employee {
         this.managerType = managerType;
     }
 
+    public void setManagerType(ManagerType managerType) {
+        setManagerTypeByAdmin(managerType);
+    }
+
     public void addCourseForRegistration(Course course) {
         if (!coursesForRegistration.contains(course)) {
             coursesForRegistration.add(course);

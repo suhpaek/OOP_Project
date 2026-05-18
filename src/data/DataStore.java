@@ -1,5 +1,8 @@
 package data;
 
+import academic.Course;
+import communication.Complaint;
+import communication.Message;
 import communication.News;
 import enums.NewsType;
 import research.ResearchPaper;
@@ -20,6 +23,9 @@ public class DataStore {
     private final List<User> users = new ArrayList<>();
     private final List<ActionLog> logs = new ArrayList<>();
     private final List<News> news = new ArrayList<>();
+    private final List<Message> messages = new ArrayList<>();
+    private final List<Complaint> complaints = new ArrayList<>();
+    private final List<Course> courses = new ArrayList<>();
 
     private DataStore() {
     }
@@ -91,6 +97,30 @@ public class DataStore {
         return new ArrayList<>(news);
     }
 
+    public void addMessage(Message message) {
+        if (message != null) messages.add(message);
+    }
+
+    public List<Message> getMessages() {
+        return new ArrayList<>(messages);
+    }
+
+    public void addComplaint(Complaint complaint) {
+        if (complaint != null) complaints.add(complaint);
+    }
+
+    public List<Complaint> getComplaints() {
+        return new ArrayList<>(complaints);
+    }
+
+    public void addCourse(Course course) {
+        if (course != null && !courses.contains(course)) courses.add(course);
+    }
+
+    public List<Course> getCourses() {
+        return new ArrayList<>(courses);
+    }
+
     public void publishResearchPaper(Researcher researcher, ResearchPaper paper) {
         researcher.publishPaper(paper);
     }
@@ -113,6 +143,9 @@ public class DataStore {
             outputStream.writeObject(users);
             outputStream.writeObject(logs);
             outputStream.writeObject(news);
+            outputStream.writeObject(messages);
+            outputStream.writeObject(complaints);
+            outputStream.writeObject(courses);
         }
     }
 
@@ -127,9 +160,15 @@ public class DataStore {
             users.clear();
             logs.clear();
             news.clear();
+            messages.clear();
+            complaints.clear();
+            courses.clear();
             users.addAll((List<User>) inputStream.readObject());
             logs.addAll((List<ActionLog>) inputStream.readObject());
             news.addAll((List<News>) inputStream.readObject());
+            messages.addAll((List<Message>) inputStream.readObject());
+            complaints.addAll((List<Complaint>) inputStream.readObject());
+            courses.addAll((List<Course>) inputStream.readObject());
         }
     }
 }
