@@ -9,16 +9,16 @@ public class ResearchProject implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String               topic;
-    private List<Researcher>     participants;
-    private List<ResearchPaper>  publishedPapers;
-    private String               description;
+    private String topic;
+    private List<Researcher> participants;
+    private List<ResearchPaper> publishedPapers;
+    private String description;
 
     public ResearchProject(String topic) {
-        this.topic          = Objects.requireNonNull(topic, "topic must not be null");
-        this.participants   = new ArrayList<>();
+        this.topic = Objects.requireNonNull(topic, "topic must not be null");
+        this.participants = new ArrayList<>();
         this.publishedPapers = new ArrayList<>();
-        this.description    = "";
+        this.description = "";
     }
 
     public ResearchProject(String topic, String description) {
@@ -51,12 +51,22 @@ public class ResearchProject implements Serializable {
         }
     }
 
-    public String               getTopic()          { return topic; }
-    public String               getDescription()    { return description; }
-    public List<Researcher>     getParticipants()   { return new ArrayList<>(participants); }
-    public List<ResearchPaper>  getPublishedPapers(){ return new ArrayList<>(publishedPapers); }
+    public String getTopic() { 
+        return topic; 
+    }
+    public String getDescription(){ 
+        return description; 
+    }
+    public List<Researcher> getParticipants(){ 
+        return new ArrayList<>(participants); 
+    }
+    public List<ResearchPaper> getPublishedPapers(){ 
+        return new ArrayList<>(publishedPapers); 
+    }
 
-    public void setDescription(String description)  { this.description = description; }
+    public void setDescription(String description) { 
+        this.description = description; 
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -10,22 +10,22 @@ public class TechSupportRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String        id;
-    private String        title;
-    private String        description;
-    private String        submittedById;
+    private String id;
+    private String title;
+    private String description;
+    private String submittedById;
     private RequestStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime viewedAt;
     private LocalDateTime resolvedAt;
 
     public TechSupportRequest(String id, String title, String description, String submittedById) {
-        this.id            = Objects.requireNonNull(id,    "id must not be null");
-        this.title         = Objects.requireNonNull(title, "title must not be null");
-        this.description   = description;
+        this.id = Objects.requireNonNull(id, "id must not be null");
+        this.title = Objects.requireNonNull(title, "title must not be null");
+        this.description = description;
         this.submittedById = submittedById;
-        this.status        = RequestStatus.NEW;
-        this.createdAt     = LocalDateTime.now();
+        this.status = RequestStatus.NEW;
+        this.createdAt = LocalDateTime.now();
     }
 
     public void markViewed() {
@@ -59,14 +59,30 @@ public class TechSupportRequest implements Serializable {
         this.resolvedAt = LocalDateTime.now();
     }
 
-    public String        getId()            { return id; }
-    public String        getTitle()         { return title; }
-    public String        getDescription()   { return description; }
-    public String        getSubmittedById() { return submittedById; }
-    public RequestStatus getStatus()        { return status; }
-    public LocalDateTime getCreatedAt()     { return createdAt; }
-    public LocalDateTime getViewedAt()      { return viewedAt; }
-    public LocalDateTime getResolvedAt()    { return resolvedAt; }
+    public String getId() {
+        return id; 
+    }
+    public String getTitle() { 
+        return title; 
+    }
+    public String  getDescription() { 
+        return description; 
+    }
+    public String  getSubmittedById(){ 
+        return submittedById; 
+    }
+    public RequestStatus getStatus() { 
+        return status; 
+    }
+    public LocalDateTime getCreatedAt() { 
+        return createdAt; 
+    }
+    public LocalDateTime getViewedAt() { 
+        return viewedAt; 
+    }
+    public LocalDateTime getResolvedAt() { 
+        return resolvedAt; 
+    }
 
     @Override
     public boolean equals(Object o) {

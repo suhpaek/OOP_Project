@@ -26,13 +26,13 @@ public class Researcher implements Serializable {
     public static final Comparator<ResearchPaper> BY_LENGTH =
             Comparator.comparingInt(ResearchPaper::getPages).reversed();
 
-    private User               user;
-    private List<ResearchPaper>  papers;
+    private User user;
+    private List<ResearchPaper> papers;
     private List<ResearchProject> projects;
 
     public Researcher(User user) {
-        this.user     = Objects.requireNonNull(user, "User must not be null");
-        this.papers   = new ArrayList<>();
+        this.user = Objects.requireNonNull(user, "User must not be null");
+        this.papers = new ArrayList<>();
         this.projects = new ArrayList<>();
     }
 
@@ -47,9 +47,9 @@ public class Researcher implements Serializable {
         DataStore ds = DataStore.getInstance();
         ds.addPaper(paper);
 
-        String newsTitle   = "New Research Paper: " + paper.getTitle();
+        String newsTitle = "New Research Paper: " + paper.getTitle();
         String newsContent = getName() + " published a paper in \"" + paper.getJournalName() + "\"";
-        int    newsId      = Objects.hash(getId(), paper.getTitle(), System.currentTimeMillis());
+        int newsId = Objects.hash(getId(), paper.getTitle(), System.currentTimeMillis());
         ds.addNews(new News(newsId, newsTitle, newsContent, NewsType.RESEARCH));
         ds.logAction(getId(), "Published paper: " + paper.getTitle());
     }
@@ -97,8 +97,7 @@ public class Researcher implements Serializable {
         return papers.stream().mapToInt(ResearchPaper::getCitations).sum();
     }
 
-    public static List<ResearchPaper> printAllPapers(List<ResearchPaper> papers,
-                                                     Comparator<ResearchPaper> comparator) {
+    public static List<ResearchPaper> printAllPapers(List<ResearchPaper> papers, Comparator<ResearchPaper> comparator) {
         return papers.stream()
                 .sorted(comparator)
                 .collect(Collectors.toList());
@@ -136,12 +135,22 @@ public class Researcher implements Serializable {
         });
     }
 
-    public String   getName()     { return user.getFullName(); }
-    public String   getId()       { return user.getId(); }
-    public User     getUser()     { return user; }
+    public String getName(){ 
+        return user.getFullName(); 
+    }
+    public String getId(){ 
+        return user.getId(); 
+    }
+    public User getUser(){ 
+        return user; 
+    }
 
-    public List<ResearchPaper>   getPapers()   { return new ArrayList<>(papers); }
-    public List<ResearchProject> getProjects() { return new ArrayList<>(projects); }
+    public List<ResearchPaper> getPapers() { 
+        return new ArrayList<>(papers); 
+    }
+    public List<ResearchProject> getProjects() { 
+        return new ArrayList<>(projects); 
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -8,22 +8,30 @@ public class Comment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int           id;
-    private String        text;
-    private String        authorId;
+    private int id;
+    private String text;
+    private String authorId;
     private LocalDateTime createdAt;
 
     public Comment(int id, String text, String authorId) {
-        this.id        = id;
-        this.text      = Objects.requireNonNull(text,     "text must not be null");
-        this.authorId  = Objects.requireNonNull(authorId, "authorId must not be null");
+        this.id = id;
+        this.text = Objects.requireNonNull(text,     "text must not be null");
+        this.authorId = Objects.requireNonNull(authorId, "authorId must not be null");
         this.createdAt = LocalDateTime.now();
     }
 
-    public int           getId()        { return id; }
-    public String        getText()      { return text; }
-    public String        getAuthorId()  { return authorId; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public int getId() { 
+        return id; 
+    }
+    public String getText(){ 
+        return text; 
+    }
+    public String getAuthorId(){ 
+        return authorId; 
+    }
+    public LocalDateTime getCreatedAt(){ 
+        return createdAt; 
+    }
 
     public void setText(String text) {
         this.text = Objects.requireNonNull(text, "text must not be null");

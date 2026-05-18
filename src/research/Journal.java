@@ -9,15 +9,15 @@ public class Journal implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String              name;
-    private List<User>          subscribers;
+    private String name;
+    private List<User> subscribers;
     private List<ResearchPaper> papers;
-    private List<String>        notificationLog;
+    private List<String> notificationLog;
 
     public Journal(String name) {
-        this.name            = Objects.requireNonNull(name, "name must not be null");
-        this.subscribers     = new ArrayList<>();
-        this.papers          = new ArrayList<>();
+        this.name = Objects.requireNonNull(name, "name must not be null");
+        this.subscribers = new ArrayList<>();
+        this.papers = new ArrayList<>();
         this.notificationLog = new ArrayList<>();
     }
 
@@ -53,10 +53,18 @@ public class Journal implements Serializable {
         }
     }
 
-    public String              getName()            { return name; }
-    public List<User>          getSubscribers()     { return new ArrayList<>(subscribers); }
-    public List<ResearchPaper> getPapers()          { return new ArrayList<>(papers); }
-    public List<String>        getNotificationLog() { return new ArrayList<>(notificationLog); }
+    public String getName() { 
+        return name; 
+    }
+    public List<User> getSubscribers(){ 
+        return new ArrayList<>(subscribers); 
+    }
+    public List<ResearchPaper> getPapers() { 
+        return new ArrayList<>(papers); 
+    }
+    public List<String> getNotificationLog() { 
+        return new ArrayList<>(notificationLog); 
+    }
 
     @Override
     public boolean equals(Object o) {

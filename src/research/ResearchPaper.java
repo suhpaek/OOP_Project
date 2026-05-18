@@ -101,25 +101,51 @@ public class ResearchPaper implements Serializable, Comparable<ResearchPaper> {
         return publishDate.compareTo(other.publishDate);
     }
 
-    public String    getTitle()       { return title; }
-    public void      setTitle(String t){ this.title = t; }
+    public String getTitle(){
+        return title;
+    }
+    public void setTitle(String t){ 
+        this.title = t; 
+    }
 
-    public List<Researcher> getAuthors() { return Collections.unmodifiableList(authors); }
+    public List<Researcher> getAuthors() { 
+        return Collections.unmodifiableList(authors); 
+    }
 
-    public String    getJournalName()  { return journalName; }
-    public void      setJournalName(String j) { this.journalName = j; }
+    public String getJournalName() { 
+        return journalName; 
+    }
+    public void setJournalName(String j) { 
+        this.journalName = j; 
+    }
 
-    public int       getPages()        { return pages; }
-    public void      setPages(int p)   { this.pages = p; }
+    public int  getPages() {
+        return pages; 
+    }
+    public void setPages(int p){ 
+        this.pages = p; 
+    }
 
-    public int       getCitations()    { return citations; }
-    public void      setCitations(int c){ this.citations = c; }
+    public int getCitations(){ 
+        return citations; 
+    }
+    public void setCitations(int c){ 
+        this.citations = c; 
+    }
 
-    public LocalDate getPublishDate()  { return publishDate; }
-    public void      setPublishDate(LocalDate d) { this.publishDate = d; }
+    public LocalDate getPublishDate()  { 
+        return publishDate; 
+    }
+    public void setPublishDate(LocalDate d) { 
+        this.publishDate = d; 
+    }
 
-    public String    getDoi()          { return doi; }
-    public void      setDoi(String d)  { this.doi = d; }
+    public String getDoi() { 
+        return doi; 
+    }
+    public void setDoi(String d) { 
+        this.doi = d; 
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -8,22 +8,30 @@ public class ActionLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String        id;
-    private String        actorId;
-    private String        action;
+    private String id;
+    private String actorId;
+    private String action;
     private LocalDateTime createdAt;
 
     public ActionLog(String id, String actorId, String action) {
-        this.id        = Objects.requireNonNull(id,      "id must not be null");
-        this.actorId   = Objects.requireNonNull(actorId, "actorId must not be null");
-        this.action    = Objects.requireNonNull(action,  "action must not be null");
+        this.id = Objects.requireNonNull(id, "id must not be null");
+        this.actorId = Objects.requireNonNull(actorId, "actorId must not be null");
+        this.action = Objects.requireNonNull(action, "action must not be null");
         this.createdAt = LocalDateTime.now();
     }
 
-    public String        getId()        { return id; }
-    public String        getActorId()   { return actorId; }
-    public String        getAction()    { return action; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getId() { 
+        return id; 
+    }
+    public String getActorId(){ 
+        return actorId; 
+    }
+    public String getAction() { 
+        return action; 
+    }
+    public LocalDateTime getCreatedAt() { 
+        return createdAt; 
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -174,7 +174,7 @@ public class DataStore {
  
     public List<News> getNewsSorted() {
         return newsList.stream()
-                .sorted(Comparator
+                    .sorted(Comparator
                         .comparing(News::isPinned).reversed()
                         .thenComparing(News::getCreatedAt, Comparator.reverseOrder()))
                 .collect(Collectors.toList());

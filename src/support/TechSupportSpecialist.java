@@ -14,8 +14,7 @@ public class TechSupportSpecialist extends Employee {
     private List<TechSupportRequest> assignedRequests;
 
 
-    public TechSupportSpecialist(String id, String username, String password,
-                                  String firstName, String lastName, String email) {
+    public TechSupportSpecialist(String id, String username, String password, String firstName, String lastName, String email) {
         super(username, password, firstName, lastName, email);
         this.assignedRequests = new ArrayList<>();
     }

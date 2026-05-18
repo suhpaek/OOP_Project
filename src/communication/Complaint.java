@@ -10,39 +10,54 @@ public class Complaint implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int           id;
-    private String        text;
-    private UrgencyLevel  urgency;
-    private String        teacherId;
-    private String        targetStudentId;
+    private int id;
+    private String text;
+    private UrgencyLevel urgency;
+    private String teacherId;
+    private String targetStudentId;
     private LocalDateTime createdAt;
-    private boolean       resolved;
+    private boolean resolved;
 
 
-    public Complaint(int id, String text, UrgencyLevel urgency,
-                     String teacherId, String targetStudentId) {
-        this.id              = id;
-        this.text            = Objects.requireNonNull(text,      "text must not be null");
-        this.urgency         = Objects.requireNonNull(urgency,   "urgency must not be null");
-        this.teacherId       = Objects.requireNonNull(teacherId, "teacherId must not be null");
+    public Complaint(int id, String text, UrgencyLevel urgency, String teacherId, String targetStudentId) {
+        this.id = id;
+        this.text = Objects.requireNonNull(text,      "text must not be null");
+        this.urgency = Objects.requireNonNull(urgency,   "urgency must not be null");
+        this.teacherId = Objects.requireNonNull(teacherId, "teacherId must not be null");
         this.targetStudentId = targetStudentId;
-        this.createdAt       = LocalDateTime.now();
-        this.resolved        = false;
+        this.createdAt = LocalDateTime.now();
+        this.resolved = false;
     }
 
     public Complaint(int id, String text, UrgencyLevel urgency, String teacherId) {
         this(id, text, urgency, teacherId, null);
     }
 
-    public void resolve() { this.resolved = true; }
+    public void resolve(){
+        this.resolved = true;
+    }
 
-    public int           getId()              { return id; }
-    public String        getText()            { return text; }
-    public UrgencyLevel  getUrgency()         { return urgency; }
-    public String        getTeacherId()       { return teacherId; }
-    public String        getTargetStudentId() { return targetStudentId; }
-    public LocalDateTime getCreatedAt()       { return createdAt; }
-    public boolean       isResolved()         { return resolved; }
+    public int getId(){ 
+        return id; 
+    }
+    public String getText(){ 
+        return text; 
+    }
+    public UrgencyLevel getUrgency(){ 
+        return urgency; 
+    }
+    public String getTeacherId(){ 
+        return teacherId; 
+    }
+    public String getTargetStudentId() { 
+        return targetStudentId; 
+    }
+    public LocalDateTime getCreatedAt(){ 
+        return createdAt; 
+    }
+    public boolean isResolved(){ 
+        return resolved; 
+    }
 
     @Override
     public boolean equals(Object o) {
