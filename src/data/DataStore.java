@@ -14,6 +14,7 @@ import users.User;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class DataStore {
@@ -72,13 +73,20 @@ public class DataStore {
         return user.get();
     }
 
-    public User authenticate(String username, String password) throws exceptions.AuthenticationException {
-        for (User user : users) {
-            if (user.login(username, password)) {
-                return user;
-            }
+    public User findUserByUsername(String username) throws exceptions.UserNotFoundException {
+        Optional<User> user = users.stream()
+                .filter(candidate -> Objects.equals(candidate.getUsername(), username))
+                .findFirst();
+
+        if (user.isEmpty()) {
+            throw new exceptions.UserNotFoundException(username);
         }
-        throw new exceptions.AuthenticationException("Invalid username or password");
+        return user.get();
+    }
+
+    public User authenticate(String username, String password)
+            throws exceptions.UserNotFoundException, exceptions.AuthenticationException {
+        return new services.AuthenticationService(this).login(username, password);
     }
 
     public void addLog(ActionLog actionLog) {

@@ -1,15 +1,16 @@
 package users;
 
 
-import communication.Comment;
-import enums.Gender;
-import enums.Language;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import communication.Comment;
+import enums.Gender;
+import enums.Language;
 
 public abstract class User implements Serializable {
     private static final Set<String> USED_IDS = ConcurrentHashMap.newKeySet();
@@ -23,7 +24,7 @@ public abstract class User implements Serializable {
     private String email;
     private Language language;
     private boolean isActive;
-    private transient boolean loggedIn;
+    private boolean loggedIn;
 
     protected User() {
         this.id = generateUniqueId();
@@ -59,6 +60,10 @@ public abstract class User implements Serializable {
         loggedIn = false;
     }
 
+    public boolean isPasswordCorrect(String password) {
+        return Objects.equals(this.password, password);
+    }
+    
     public final void updateEmail(String email) {
         this.email = email;
     }
