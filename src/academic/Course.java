@@ -1,20 +1,25 @@
 package academic;
 
 import enums.CourseType;
+import enums.School;
 import users.Student;
 import users.Teacher;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class Course implements Serializable {
+public class Course implements Serializable, Comparable<Course> {
     private String code;
     private String name;
     private int credits;
     private CourseType courseType;
+    private School intendedSchool;
+    private int intendedYearOfStudy;
     private Teacher lectureTeacher;
     private Teacher practiceTeacher;
     private List<Lesson> lessons;
@@ -51,6 +56,25 @@ public class Course implements Serializable {
         return courseType;
     }
 
+    public School getIntendedSchool() {
+        return intendedSchool;
+    }
+
+    public void setIntendedSchool(School intendedSchool) {
+        this.intendedSchool = intendedSchool;
+    }
+
+    public int getIntendedYearOfStudy() {
+        return intendedYearOfStudy;
+    }
+
+    public void setIntendedYearOfStudy(int intendedYearOfStudy) {
+        if (intendedYearOfStudy < 1) {
+            throw new IllegalArgumentException("Intended year of study must be positive");
+        }
+        this.intendedYearOfStudy = intendedYearOfStudy;
+    }
+
     public Teacher getLectureTeacher() {
         return lectureTeacher;
     }
@@ -68,19 +92,21 @@ public class Course implements Serializable {
     }
 
     public List<Lesson> getLessons() {
-        return lessons;
+        return Collections.unmodifiableList(lessons);
     }
 
     public List<Student> getEnrolledStudents() {
-        return enrolledStudents;
+        return Collections.unmodifiableList(enrolledStudents);
     }
 
     public Map<Student, Mark> getMarks() {
-        return marks;
+        return Collections.unmodifiableMap(marks);
     }
 
     public void addLesson(Lesson lesson) {
-        lessons.add(lesson);
+        if (lesson != null) {
+            lessons.add(lesson);
+        }
     }
 
     public boolean isStudentEnrolled(Student student) {
@@ -99,7 +125,7 @@ public class Course implements Serializable {
     }
 
     public void putMark(Student student, Mark mark) {
-        if (enrolledStudents.contains(student)) {
+        if (student != null && mark != null && enrolledStudents.contains(student)) {
             marks.put(student, mark);
         }
     }
@@ -111,5 +137,23 @@ public class Course implements Serializable {
     @Override
     public String toString() {
         return code + " - " + name + " (" + credits + " credits, " + courseType + ")";
+    }
+
+    @Override
+    public int compareTo(Course other) {
+        return code.compareToIgnoreCase(other.code);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
+        Course course = (Course) o;
+        return Objects.equals(code, course.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
     }
 }

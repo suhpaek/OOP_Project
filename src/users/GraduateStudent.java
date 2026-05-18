@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GraduateStudent extends Student {
-    private Degree degree;
+    private Degree graduateDegree;
     private Researcher researchSupervisor;
     private final List<ResearchPaper> diplomaProjects = new ArrayList<>();
 
@@ -19,37 +19,57 @@ public class GraduateStudent extends Student {
 
     public GraduateStudent(String username, String password, String firstName, String lastName, String email, Degree degree) {
         super(username, password, firstName, lastName, email);
-        this.degree = degree;
+        this.graduateDegree = degree;
     }
 
     public Degree getDegree() {
-        return degree;
+        return graduateDegree;
+    }
+
+    public void setDegree(Degree degree) {
+        this.graduateDegree = degree;
     }
 
     void setGraduateDegreeByAdmin(Degree degree) {
-        this.degree = degree;
-    }
-
-    public String getResearchSupervisorName() {
-        return researchSupervisor == null ? null : researchSupervisor.getName();
+        this.graduateDegree = degree;
     }
 
     public Researcher getResearchSupervisor() {
         return researchSupervisor;
     }
 
-    void setResearchSupervisorByAdmin(Researcher researchSupervisor) throws InvalidSupervisorException {
-        if (researchSupervisor != null && researchSupervisor.calculateHIndex() < 3) {
-            throw new InvalidSupervisorException(researchSupervisor.getName(), researchSupervisor.calculateHIndex());
+    public String getResearchSupervisorName() {
+        return researchSupervisor == null ? null : researchSupervisor.getName();
+    }
+
+    public void setResearchSupervisorName(String researchSupervisorName) {
+        // kept for compatibility with previous model
+    }
+
+    public void setResearchSupervisorByAdmin(Researcher researchSupervisor) throws InvalidSupervisorException {
+        if (researchSupervisor == null) {
+            throw new InvalidSupervisorException("null", 0);
+        }
+        int hIndex = researchSupervisor.calculateHIndex();
+        if (hIndex < 3) {
+            throw new InvalidSupervisorException(researchSupervisor.getName(), hIndex);
         }
         this.researchSupervisor = researchSupervisor;
     }
 
     public List<ResearchPaper> getDiplomaProjects() {
-        return new ArrayList<>(diplomaProjects);
+        return diplomaProjects;
     }
 
     public void addDiplomaProject(ResearchPaper paper) {
-        diplomaProjects.add(paper);
+        if (paper != null) {
+            diplomaProjects.add(paper);
+        }
+    }
+
+    public void addDiplomaProject(String paper) {
+        if (paper != null) {
+            diplomaProjects.add(new ResearchPaper(paper, "Unknown Journal", 0, null, paper));
+        }
     }
 }
