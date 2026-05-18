@@ -7,6 +7,7 @@ import enums.TeacherType;
 import enums.UrgencyLevel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ public class Teacher extends Employee {
     private List<Course> assignedCourses;
     private TeacherType teacherType;
     private List<Integer> ratingMarks;
-    private transient final List<Complaint> complaints = new ArrayList<>();
+    private final List<Complaint> complaints = new ArrayList<>();
 
     public Teacher() {
         super();
@@ -30,7 +31,7 @@ public class Teacher extends Employee {
     }
 
     public List<Course> getAssignedCourses() {
-        return assignedCourses;
+        return Collections.unmodifiableList(assignedCourses);
     }
 
     public TeacherType getTeacherType() {
@@ -78,21 +79,26 @@ public class Teacher extends Employee {
         student.addMarkToTranscript(course, mark);
     }
 
-    public void viewCourses() {
+    public String viewCourses() {
+        StringBuilder builder = new StringBuilder();
         for (Course course : assignedCourses) {
-            System.out.println(course);
+            builder.append(course).append('\n');
         }
+        String output = builder.toString().trim();
+        System.out.println(output);
+        return output;
     }
 
-    public void viewStudents(Course course) {
+    public List<Student> viewStudents(Course course) {
         if (!assignedCourses.contains(course)) {
             System.out.println("Teacher is not assigned to this course.");
-            return;
+            return Collections.emptyList();
         }
 
         for (Student student : course.getEnrolledStudents()) {
             System.out.println(student);
         }
+        return course.getEnrolledStudents();
     }
 
     public Complaint sendComplaint(Student student, String text, UrgencyLevel urgencyLevel) {
@@ -107,6 +113,6 @@ public class Teacher extends Employee {
     }
 
     public List<Complaint> getComplaints() {
-        return complaints;
+        return Collections.unmodifiableList(complaints);
     }
 }

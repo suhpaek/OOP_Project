@@ -4,6 +4,8 @@ import academic.Course;
 import academic.RegistrationRequest;
 import data.DataStore;
 import enums.ManagerType;
+import exceptions.CreditLimitExceededException;
+import exceptions.TooManyFailedCoursesException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -49,13 +51,14 @@ public class Manager extends Employee {
         }
     }
 
-    public void approveRegistration(RegistrationRequest request) throws Exception {
-        request.approve();
+    public void approveRegistration(RegistrationRequest request) throws CreditLimitExceededException, TooManyFailedCoursesException {
+        request.approve(this);
     }
 
     public void rejectRegistration(RegistrationRequest request) {
-        request.reject();
+        request.reject(this);
     }
+
 
     public List<Student> viewStudentsByName() {
         List<Student> students = DataStore.getInstance().getStudents();

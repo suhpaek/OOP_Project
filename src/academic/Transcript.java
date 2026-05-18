@@ -3,8 +3,11 @@ package academic;
 import users.Student;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Transcript implements Serializable {
     private Student student;
@@ -24,7 +27,7 @@ public class Transcript implements Serializable {
     }
 
     public Map<Course, Mark> getCourseMarks() {
-        return courseMarks;
+        return Collections.unmodifiableMap(courseMarks);
     }
 
     public void addRecord(Course course, Mark mark) {
@@ -67,10 +70,33 @@ public class Transcript implements Serializable {
     }
 
     public void printTranscript() {
+        System.out.println(getTranscriptSummary());
+    }
+
+    public String getTranscriptSummary() {
+        StringBuilder builder = new StringBuilder();
         for (Map.Entry<Course, Mark> entry : courseMarks.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
+            builder.append(entry.getKey())
+                    .append(" -> ")
+                    .append(entry.getValue())
+                    .append('\n');
         }
-        System.out.println("GPA: " + calculateGpa());
+        builder.append("GPA: ").append(calculateGpa());
+        return builder.toString();
+    }
+
+    public List<Course> getPassedCourses() {
+        return courseMarks.entrySet().stream()
+                .filter(entry -> entry.getValue().isPassed())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    public List<Course> getFailedCourses() {
+        return courseMarks.entrySet().stream()
+                .filter(entry -> !entry.getValue().isPassed())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -4,6 +4,7 @@ import enums.LessonType;
 import users.Teacher;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Lesson implements Serializable {
     private LessonType type;
@@ -72,5 +73,21 @@ public class Lesson implements Serializable {
                 ", room='" + room + '\'' +
                 ", instructor=" + instructor +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Lesson)) return false;
+        Lesson lesson = (Lesson) o;
+        return type == lesson.type
+                && Objects.equals(day, lesson.day)
+                && Objects.equals(time, lesson.time)
+                && Objects.equals(room, lesson.room);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, day, time, room);
     }
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class Employee extends User {
     private double salary;
-    private transient final List<Message> sentMessages = new ArrayList<>();
+    private final List<Message> sentMessages = new ArrayList<>();
 
     public Employee() {
         super();

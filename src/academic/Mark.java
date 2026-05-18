@@ -1,8 +1,13 @@
 package academic;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Mark implements Serializable {
+    private static final double MAX_FIRST_ATTESTATION = 30.0;
+    private static final double MAX_SECOND_ATTESTATION = 30.0;
+    private static final double MAX_FINAL_EXAM = 40.0;
+
     private double firstAttestation;
     private double secondAttestation;
     private double finalExam;
@@ -11,9 +16,9 @@ public class Mark implements Serializable {
     }
 
     public Mark(double firstAttestation, double secondAttestation, double finalExam) {
-        this.firstAttestation = firstAttestation;
-        this.secondAttestation = secondAttestation;
-        this.finalExam = finalExam;
+        setFirstAttestation(firstAttestation);
+        setSecondAttestation(secondAttestation);
+        setFinalExam(finalExam);
     }
 
     public double getFirstAttestation() {
@@ -21,6 +26,7 @@ public class Mark implements Serializable {
     }
 
     public void setFirstAttestation(double firstAttestation) {
+        validateComponent(firstAttestation, MAX_FIRST_ATTESTATION, "First attestation");
         this.firstAttestation = firstAttestation;
     }
 
@@ -29,6 +35,7 @@ public class Mark implements Serializable {
     }
 
     public void setSecondAttestation(double secondAttestation) {
+        validateComponent(secondAttestation, MAX_SECOND_ATTESTATION, "Second attestation");
         this.secondAttestation = secondAttestation;
     }
 
@@ -37,6 +44,7 @@ public class Mark implements Serializable {
     }
 
     public void setFinalExam(double finalExam) {
+        validateComponent(finalExam, MAX_FINAL_EXAM, "Final exam");
         this.finalExam = finalExam;
     }
 
@@ -63,6 +71,13 @@ public class Mark implements Serializable {
         if (total >= 50) return "D";
         return "F";
     }
+
+    private void validateComponent(double value, double maxValue, String fieldName) {
+        if (value < 0 || value > maxValue) {
+            throw new IllegalArgumentException(fieldName + " must be between 0 and " + maxValue);
+        }
+    }
+
     @Override
     public String toString() {
         return "Mark{" +
@@ -72,5 +87,20 @@ public class Mark implements Serializable {
                 ", total=" + getTotal() +
                 ", letterGrade='" + getLetterGrade() + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Mark)) return false;
+        Mark mark = (Mark) o;
+        return Double.compare(mark.firstAttestation, firstAttestation) == 0
+                && Double.compare(mark.secondAttestation, secondAttestation) == 0
+                && Double.compare(mark.finalExam, finalExam) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstAttestation, secondAttestation, finalExam);
     }
 }
