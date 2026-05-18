@@ -3,20 +3,22 @@ package research;
 import users.User;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Journal implements Serializable {
-    private String name;
-    private List<User> subscribers;
+
+    private static final long serialVersionUID = 1L;
+
+    private String              name;
+    private List<User>          subscribers;
     private List<ResearchPaper> papers;
-    private List<String> notifications;
+    private List<String>        notificationLog;
 
     public Journal(String name) {
-        this.name = name;
-        this.subscribers = new ArrayList<>();
-        this.papers = new ArrayList<>();
-        this.notifications = new ArrayList<>();
+        this.name            = Objects.requireNonNull(name, "name must not be null");
+        this.subscribers     = new ArrayList<>();
+        this.papers          = new ArrayList<>();
+        this.notificationLog = new ArrayList<>();
     }
 
     public void subscribe(User user) {
@@ -29,31 +31,49 @@ public class Journal implements Serializable {
         subscribers.remove(user);
     }
 
+    public boolean isSubscribed(User user) {
+        return subscribers.contains(user);
+    }
+
     public void publishPaper(ResearchPaper paper) {
-        papers.add(paper);
+        if (paper == null) return;
+        if (!papers.contains(paper)) {
+            papers.add(paper);
+        }
         notifySubscribers(paper);
     }
 
-    public void notifySubscribers(ResearchPaper paper) {
+    private void notifySubscribers(ResearchPaper paper) {
+        String msg = String.format("[%s] New paper published: \"%s\" — %s",
+                name, paper.getTitle(),
+                paper.getPublishDate() != null ? paper.getPublishDate().toString() : "n.d.");
+
         for (User subscriber : subscribers) {
-            notifications.add("Notification for " + subscriber.getId() + ": new paper published in "
-                    + name + " - " + paper.getTitle());
+            notificationLog.add("[→ " + subscriber.getId() + "] " + msg);
         }
     }
 
-    public String getName() {
-        return name;
+    public String              getName()            { return name; }
+    public List<User>          getSubscribers()     { return new ArrayList<>(subscribers); }
+    public List<ResearchPaper> getPapers()          { return new ArrayList<>(papers); }
+    public List<String>        getNotificationLog() { return new ArrayList<>(notificationLog); }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Journal)) return false;
+        Journal journal = (Journal) o;
+        return Objects.equals(name, journal.name);
     }
 
-    public List<User> getSubscribers() {
-        return new ArrayList<>(subscribers);
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
-    public List<ResearchPaper> getPapers() {
-        return new ArrayList<>(papers);
-    }
-
-    public List<String> getNotifications() {
-        return new ArrayList<>(notifications);
+    @Override
+    public String toString() {
+        return String.format("Journal{name='%s', subscribers=%d, papers=%d}",
+                name, subscribers.size(), papers.size());
     }
 }

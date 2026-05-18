@@ -26,8 +26,8 @@ public class Employee extends User {
         this.salary = salary;
     }
 
-    public Message sendMessage(Employee receiver, String text) {
-        Message message = new Message(UUID.randomUUID().toString(), getId(), receiver.getId(), text);
+    public Message sendMessage(Employee receiver, String msg1) {
+        Message message = new Message(UUID.randomUUID().toString(), getId(), receiver.getId(), msg1);
         sentMessages.add(message);
         return message;
     }

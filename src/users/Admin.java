@@ -36,32 +36,32 @@ public class Admin extends User {
                                   Gender gender, Date dateOfBirth) {
         user.updateProfileByAdmin(username, firstName, lastName, gender, dateOfBirth);
         DataStore.getInstance().updateUser(user);
-        DataStore.getInstance().addLog(new ActionLog(user.getId(), getId(), "Updated user profile"));
+        DataStore.getInstance().logAction(user.getId(), "Updated user profile");
     }
 
     public void updateStudentAcademicInfo(Student student, Degree degree, School school) {
         student.setDegreeByAdmin(degree);
         student.setSchoolByAdmin(school);
         DataStore.getInstance().updateUser(student);
-        DataStore.getInstance().addLog(new ActionLog(student.getId(), getId(), "Updated student academic info"));
+        DataStore.getInstance().logAction(student.getId(), "Updated student academic info");
     }
 
     public void updateEmployeeSalary(Employee employee, double salary) {
         employee.setSalaryByAdmin(salary);
         DataStore.getInstance().updateUser(employee);
-        DataStore.getInstance().addLog(new ActionLog(employee.getId(), getId(), "Updated employee salary"));
+        DataStore.getInstance().logAction(employee.getId(), "Updated employee salary");
     }
 
     public void updateTeacherType(Teacher teacher, TeacherType teacherType) {
         teacher.setTeacherTypeByAdmin(teacherType);
         DataStore.getInstance().updateUser(teacher);
-        DataStore.getInstance().addLog(new ActionLog(teacher.getId(), getId(), "Updated teacher type"));
+        DataStore.getInstance().logAction(teacher.getId(), "Updated teacher type");
     }
 
     public void updateManagerType(Manager manager, ManagerType managerType) {
         manager.setManagerTypeByAdmin(managerType);
         DataStore.getInstance().updateUser(manager);
-        DataStore.getInstance().addLog(new ActionLog(manager.getId(), getId(), "Updated manager type"));
+        DataStore.getInstance().logAction(manager.getId(), "Updated manager type");
     }
 
     public void updateGraduateStudentInfo(GraduateStudent student, Degree degree, Researcher researchSupervisor)
@@ -69,19 +69,19 @@ public class Admin extends User {
         student.setGraduateDegreeByAdmin(degree);
         student.setResearchSupervisorByAdmin(researchSupervisor);
         DataStore.getInstance().updateUser(student);
-        DataStore.getInstance().addLog(new ActionLog(student.getId(), getId(), "Updated graduate student info"));
+        DataStore.getInstance().logAction(student.getId(), "Updated graduate student info");
     }
 
     public void activateUser(User user) {
         user.setActiveByAdmin(true);
         DataStore.getInstance().updateUser(user);
-        DataStore.getInstance().addLog(new ActionLog(user.getId(), getId(), "Activated user"));
+        DataStore.getInstance().logAction(user.getId(), "Activated user");
     }
 
     public void deactivateUser(User user) {
         user.setActiveByAdmin(false);
         DataStore.getInstance().updateUser(user);
-        DataStore.getInstance().addLog(new ActionLog(user.getId(), getId(), "Deactivated user"));
+        DataStore.getInstance().logAction(user.getId(), "Deactivated user");
     }
 
     public void deleteUser(User user) {
@@ -97,10 +97,10 @@ public class Admin extends User {
     }
 
     public void processLogFile(File logFile) {
-        DataStore.getInstance().addLog(new ActionLog(logFile.getName(), getId(), "Processed log file"));
+        DataStore.getInstance().logAction(getId(), "Processed log file: " + logFile.getName());
     }
 
     public List<ActionLog> readLogs() {
-        return DataStore.getInstance().getLogs();
+        return DataStore.getInstance().getActionLogs();
     }
 }

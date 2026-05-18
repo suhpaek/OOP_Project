@@ -3,47 +3,55 @@ package research;
 import communication.News;
 import data.DataStore;
 import enums.NewsType;
+import exceptions.InvalidSupervisorException;
 import exceptions.NonResearcherJoinProjectException;
 import users.User;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Researcher implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private static final int  MIN_SUPERVISOR_H_INDEX = 3;
+
     public static final Comparator<ResearchPaper> BY_CITATIONS =
             Comparator.comparingInt(ResearchPaper::getCitations).reversed();
+
     public static final Comparator<ResearchPaper> BY_DATE =
-            Comparator.comparing(ResearchPaper::getPublishDate, Comparator.nullsLast(Comparator.reverseOrder()));
+            Comparator.comparing(ResearchPaper::getPublishDate,
+                    Comparator.nullsLast(Comparator.reverseOrder()));
+
     public static final Comparator<ResearchPaper> BY_LENGTH =
             Comparator.comparingInt(ResearchPaper::getPages).reversed();
 
-    private User user;
-    private List<ResearchPaper> papers;
+    private User               user;
+    private List<ResearchPaper>  papers;
     private List<ResearchProject> projects;
 
     public Researcher(User user) {
-        if (user == null) throw new IllegalArgumentException("User must not be null");
-        this.user = user;
-        this.papers = new ArrayList<>();
+        this.user     = Objects.requireNonNull(user, "User must not be null");
+        this.papers   = new ArrayList<>();
         this.projects = new ArrayList<>();
     }
 
     public void publishPaper(ResearchPaper paper) {
         if (paper == null) return;
+
         if (!papers.contains(paper)) {
             papers.add(paper);
         }
         paper.addAuthor(this);
-        DataStore.getInstance().addNews(new News(
-                Math.abs((getId() + paper.getTitle()).hashCode()),
-                "New research paper: " + paper.getTitle(),
-                getName() + " published a paper in " + paper.getJournalName(),
-                NewsType.RESEARCH
-        ));
+
+        DataStore ds = DataStore.getInstance();
+        ds.addPaper(paper);
+
+        String newsTitle   = "New Research Paper: " + paper.getTitle();
+        String newsContent = getName() + " published a paper in \"" + paper.getJournalName() + "\"";
+        int    newsId      = Objects.hash(getId(), paper.getTitle(), System.currentTimeMillis());
+        ds.addNews(new News(newsId, newsTitle, newsContent, NewsType.RESEARCH));
+        ds.logAction(getId(), "Published paper: " + paper.getTitle());
     }
 
     public void joinProject(ResearchProject project) throws NonResearcherJoinProjectException {
@@ -52,70 +60,88 @@ public class Researcher implements Serializable {
         if (!projects.contains(project)) {
             projects.add(project);
         }
+        DataStore.getInstance().logAction(getId(), "Joined project: " + project.getTopic());
     }
 
     public int calculateHIndex() {
-        List<Integer> citations = new ArrayList<>();
-        for (ResearchPaper paper : papers) {
-            citations.add(paper.getCitations());
-        }
-        citations.sort(Collections.reverseOrder());
+        List<Integer> sortedCitations = papers.stream()
+                .map(ResearchPaper::getCitations)
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
 
-        int hIndex = 0;
-        for (int i = 0; i < citations.size(); i++) {
-            if (citations.get(i) >= i + 1) {
-                hIndex = i + 1;
+        int h = 0;
+        for (int i = 0; i < sortedCitations.size(); i++) {
+            if (sortedCitations.get(i) >= i + 1) {
+                h = i + 1;
             } else {
                 break;
             }
         }
-        return hIndex;
+        return h;
+    }
+
+    public void validateAsSupervisor() throws InvalidSupervisorException {
+        int h = calculateHIndex();
+        if (h < MIN_SUPERVISOR_H_INDEX) {
+            throw new InvalidSupervisorException(getName(), h);
+        }
     }
 
     public List<ResearchPaper> printPapers(Comparator<ResearchPaper> comparator) {
-        List<ResearchPaper> sortedPapers = new ArrayList<>(papers);
-        sortedPapers.sort(comparator);
-        return sortedPapers;
+        return papers.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 
     public int getTotalCitations() {
-        int total = 0;
-        for (ResearchPaper paper : papers) {
-            total += paper.getCitations();
-        }
-        return total;
+        return papers.stream().mapToInt(ResearchPaper::getCitations).sum();
     }
 
-    public String getName() {
-        return user.getFullName();
+    public static List<ResearchPaper> printAllPapers(List<ResearchPaper> papers,
+                                                     Comparator<ResearchPaper> comparator) {
+        return papers.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 
-    public String getId() {
-        return user.getId();
+    public static Optional<Researcher> getTopCitedResearcher(List<Researcher> researchers) {
+        if (researchers == null || researchers.isEmpty()) return Optional.empty();
+        return researchers.stream()
+                .max(Comparator.comparingInt(Researcher::getTotalCitations));
     }
 
-    public User getUser() {
-        return user;
+    public static Optional<Researcher> getTopCitedResearcherOfYear(List<Researcher> researchers, int year) {
+        return researchers.stream()
+                .max(Comparator.comparingInt(r ->
+                        r.getPapers().stream()
+                         .filter(p -> p.getPublishDate() != null
+                                 && p.getPublishDate().getYear() == year)
+                         .mapToInt(ResearchPaper::getCitations)
+                         .sum()
+                ));
     }
 
-    public List<ResearchPaper> getPapers() {
-        return new ArrayList<>(papers);
+    public static void announceTopCitedResearcher(List<Researcher> researchers) {
+        getTopCitedResearcher(researchers).ifPresent(top -> {
+            int newsId = Objects.hash("top-cited", top.getId(), System.currentTimeMillis());
+            News news = new News(
+                    newsId,
+                    "Top Cited Researcher: " + top.getName(),
+                    top.getName() + " leads the university with "
+                            + top.getTotalCitations() + " total citations and h-index "
+                            + top.calculateHIndex() + ".",
+                    NewsType.RESEARCH
+            );
+            DataStore.getInstance().addNews(news);
+        });
     }
 
-    public List<ResearchProject> getProjects() {
-        return new ArrayList<>(projects);
-    }
+    public String   getName()     { return user.getFullName(); }
+    public String   getId()       { return user.getId(); }
+    public User     getUser()     { return user; }
 
-    public static List<ResearchPaper> printAllPapers(List<ResearchPaper> papers, Comparator<ResearchPaper> comparator) {
-        List<ResearchPaper> sortedPapers = new ArrayList<>(papers);
-        sortedPapers.sort(comparator);
-        return sortedPapers;
-    }
-
-    public static Researcher getTopCitedResearcher(List<Researcher> researchers) {
-        if (researchers == null || researchers.isEmpty()) return null;
-        return Collections.max(researchers, Comparator.comparingInt(Researcher::getTotalCitations));
-    }
+    public List<ResearchPaper>   getPapers()   { return new ArrayList<>(papers); }
+    public List<ResearchProject> getProjects() { return new ArrayList<>(projects); }
 
     @Override
     public boolean equals(Object o) {
@@ -132,10 +158,7 @@ public class Researcher implements Serializable {
 
     @Override
     public String toString() {
-        return "Researcher{" +
-                "name='" + getName() + '\'' +
-                ", hIndex=" + calculateHIndex() +
-                ", totalCitations=" + getTotalCitations() +
-                '}';
+        return String.format("Researcher{name='%s', hIndex=%d, totalCitations=%d, papers=%d}",
+                getName(), calculateHIndex(), getTotalCitations(), papers.size());
     }
 }

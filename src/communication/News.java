@@ -4,57 +4,88 @@ import enums.NewsType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class News implements Serializable {
-    private int id;
-    private String title;
-    private String content;
-    private NewsType topic;
-    private boolean pinned;
-    private LocalDateTime createdAt;
-    private List<Comment> comments;
+public class News implements Serializable, Comparable<News> {
+
+    private static final long serialVersionUID = 1L;
+
+    private int              id;
+    private String           title;
+    private String           content;
+    private NewsType         topic;
+    private boolean          pinned;
+    private LocalDateTime    createdAt;
+    private String           authorId;
+    private List<Comment>    comments;
 
     public News(int id, String title, String content, NewsType topic) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.topic = topic;
-        this.pinned = topic == NewsType.RESEARCH;
+        this(id, title, content, topic, null);
+    }
+
+    public News(int id, String title, String content, NewsType topic, String authorId) {
+        this.id        = id;
+        this.title     = Objects.requireNonNull(title,   "title must not be null");
+        this.content   = Objects.requireNonNull(content, "content must not be null");
+        this.topic     = Objects.requireNonNull(topic,   "topic must not be null");
+        this.pinned    = (topic == NewsType.RESEARCH);
         this.createdAt = LocalDateTime.now();
-        this.comments = new ArrayList<>();
+        this.authorId  = authorId;
+        this.comments  = new ArrayList<>();
     }
 
     public void addComment(Comment comment) {
-        comments.add(comment);
+        if (comment != null) comments.add(comment);
     }
 
-    public int getId() {
-        return id;
+    public void removeComment(int commentId) {
+        comments.removeIf(c -> c.getId() == commentId);
     }
 
-    public String getTitle() {
-        return title;
+    public void setPinned(boolean pinned) {
+        if (topic == NewsType.RESEARCH) {
+            this.pinned = true;
+        } else {
+            this.pinned = pinned;
+        }
     }
 
-    public String getContent() {
-        return content;
+    @Override
+    public int compareTo(News other) {
+        if (this.pinned != other.pinned) {
+            return this.pinned ? -1 : 1;
+        }
+        return other.createdAt.compareTo(this.createdAt);
     }
 
-    public NewsType getTopic() {
-        return topic;
+    public int              getId()        { return id; }
+    public String           getTitle()     { return title; }
+    public String           getContent()   { return content; }
+    public NewsType         getTopic()     { return topic; }
+    public boolean          isPinned()     { return pinned; }
+    public LocalDateTime    getCreatedAt() { return createdAt; }
+    public String           getAuthorId()  { return authorId; }
+    public List<Comment>    getComments()  { return Collections.unmodifiableList(comments); }
+
+    public void setTitle(String title)     { this.title   = title; }
+    public void setContent(String content) { this.content = content; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof News)) return false;
+        News news = (News) o;
+        return id == news.id;
     }
 
-    public boolean isPinned() {
-        return pinned;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
+    @Override
+    public String toString() {
+        return String.format("News{id=%d, title='%s', topic=%s, pinned=%b, comments=%d}",
+                id, title, topic, pinned, comments.size());
     }
 }
