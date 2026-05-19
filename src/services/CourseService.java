@@ -9,6 +9,7 @@ import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
 import models.users.Student;
 import models.users.Teacher;
+import models.users.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,5 +77,17 @@ public class CourseService {
     public void dropStudent(Course course, Student student) { if (student != null) student.dropCourse(course); }
     public void setLectureTeacher(Course course, Teacher teacher) { if (course != null) course.setLectureTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
     public void setPracticeTeacher(Course course, Teacher teacher) { if (course != null) course.setPracticeTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
+
+    public void assignTeacher(String courseCode, String teacherUsername, boolean lecture) throws Exception {
+        Course course = findCourseByCode(courseCode);
+        User user = dataStore.findUserByUsername(teacherUsername);
+        if (course == null || !(user instanceof Teacher)) {
+            throw new IllegalArgumentException("Course or teacher not found.");
+        }
+        if (lecture) setLectureTeacher(course, (Teacher) user);
+        else setPracticeTeacher(course, (Teacher) user);
+        dataStore.save();
+    }
+
     public void addLesson(Course course, Lesson lesson) { if (course != null) course.addLesson(lesson); }
 }

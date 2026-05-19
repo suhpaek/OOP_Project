@@ -36,6 +36,9 @@ public class ManagerConsole {
                 case "3":
                     processRegistrationRequests();
                     break;
+                case "4":
+                    assignTeacher();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -53,6 +56,7 @@ public class ManagerConsole {
         System.out.println("1. Add course");
         System.out.println("2. Open/close course registration");
         System.out.println("3. View/approve registration requests");
+        System.out.println("4. Assign course to teacher");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -117,6 +121,21 @@ public class ManagerConsole {
             System.out.println("Request processed.");
         } catch (Exception e) {
             System.out.println("Could not process request: " + e.getMessage());
+        }
+    }
+
+    private void assignTeacher() {
+        try {
+            System.out.print("Course code: ");
+            String courseCode = scanner.nextLine();
+            System.out.print("Teacher username: ");
+            String teacherUsername = scanner.nextLine();
+            System.out.print("Lecture teacher? (yes/no): ");
+            boolean lecture = scanner.nextLine().trim().equalsIgnoreCase("yes");
+            courseService.assignTeacher(courseCode, teacherUsername, lecture);
+            System.out.println("Teacher assigned.");
+        } catch (Exception e) {
+            System.out.println("Could not assign teacher: " + e.getMessage());
         }
     }
 }
