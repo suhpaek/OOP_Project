@@ -6,6 +6,7 @@ import models.users.Student;
 import services.CourseService;
 import services.GradeService;
 import services.TranscriptService;
+import services.UserService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -16,6 +17,7 @@ public class StudentConsole {
     private final CourseService courseService = new CourseService(DataStore.getInstance());
     private final GradeService gradeService = new GradeService();
     private final TranscriptService transcriptService = new TranscriptService();
+    private final UserService userService = new UserService();
 
     public StudentConsole(Scanner scanner, Student student) {
         this.scanner = scanner;
@@ -49,6 +51,9 @@ public class StudentConsole {
                 case "7":
                     viewTeacherInfo();
                     break;
+                case "8":
+                    rateTeacher();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -69,6 +74,7 @@ public class StudentConsole {
         System.out.println("5. View transcript");
         System.out.println("6. Get transcript");
         System.out.println("7. View teacher info");
+        System.out.println("8. Rate teacher");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -150,6 +156,21 @@ public class StudentConsole {
             System.out.println(courseService.getTeacherInfo(student, courseCode));
         } catch (Exception e) {
             System.out.println("Could not show teacher info: " + e.getMessage());
+        }
+    }
+
+    private void rateTeacher() {
+        try {
+            System.out.print("Course code: ");
+            String courseCode = scanner.nextLine();
+            System.out.print("Rate lecture teacher? (yes/no): ");
+            boolean lecture = scanner.nextLine().trim().equalsIgnoreCase("yes");
+            System.out.print("Rating (1-5): ");
+            int rating = Integer.parseInt(scanner.nextLine().trim());
+            userService.rateCourseTeacher(student, courseCode, rating, lecture);
+            System.out.println("Teacher rated.");
+        } catch (Exception e) {
+            System.out.println("Could not rate teacher: " + e.getMessage());
         }
     }
 }
