@@ -1,15 +1,15 @@
 package data;
 
-import academic.Course;
-import communication.Complaint;
-import communication.Message;
-import communication.News;
+import models.academic.Course;
+import models.communication.Complaint;
+import models.communication.Message;
+import models.communication.News;
 import enums.NewsType;
-import research.ResearchPaper;
-import research.Researcher;
-import support.ActionLog;
-import users.Student;
-import users.User;
+import models.research.ResearchPaper;
+import models.research.Researcher;
+import models.support.ActionLog;
+import models.users.Student;
+import models.users.User;
 
 import java.io.*;
 import java.util.ArrayList;

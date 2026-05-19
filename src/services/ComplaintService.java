@@ -1,10 +1,10 @@
 package services;
 
-import communication.Complaint;
+import models.communication.Complaint;
 import data.DataStore;
 import enums.UrgencyLevel;
-import users.Student;
-import users.Teacher;
+import models.users.Student;
+import models.users.Teacher;
 
 import java.util.List;
 import java.util.UUID;

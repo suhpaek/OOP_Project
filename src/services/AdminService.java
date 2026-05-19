@@ -4,9 +4,9 @@ import data.DataStore;
 import enums.*;
 import exceptions.InvalidSupervisorException;
 import exceptions.UserNotFoundException;
-import research.Researcher;
-import support.ActionLog;
-import users.*;
+import models.research.Researcher;
+import models.support.ActionLog;
+import models.users.*;
 
 import java.io.File;
 import java.util.Date;

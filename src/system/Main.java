@@ -1,19 +1,19 @@
 package system;
 
-import academic.Course;
-import academic.Mark;
+import models.academic.Course;
+import models.academic.Mark;
 import data.DataStore;
 import enums.CourseType;
 import enums.Degree;
 import enums.TeacherType;
 import exceptions.InvalidSupervisorException;
 import java.time.LocalDate;
-import research.ResearchPaper;
-import research.Researcher;
-import users.Admin;
-import users.GraduateStudent;
-import users.Student;
-import users.Teacher;
+import models.research.ResearchPaper;
+import models.research.Researcher;
+import models.users.Admin;
+import models.users.GraduateStudent;
+import models.users.Student;
+import models.users.Teacher;
 
 public class Main {
     public static void main(String[] args) throws Exception {

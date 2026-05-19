@@ -6,8 +6,8 @@ import exceptions.AuthenticationException;
 import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
 import i18n.I18n;
-import support.ActionLog;
-import users.User;
+import models.support.ActionLog;
+import models.users.User;
 
 import java.io.IOException;
 

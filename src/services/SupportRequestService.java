@@ -1,8 +1,8 @@
 package services;
 
 import enums.RequestStatus;
-import support.TechSupportRequest;
-import support.TechSupportSpecialist;
+import models.support.TechSupportRequest;
+import models.support.TechSupportSpecialist;
 
 import java.util.ArrayList;
 import java.util.List;

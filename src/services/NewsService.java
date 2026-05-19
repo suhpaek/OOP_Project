@@ -1,7 +1,7 @@
 package services;
 
-import communication.Comment;
-import communication.News;
+import models.communication.Comment;
+import models.communication.News;
 import data.DataStore;
 import enums.NewsType;
 

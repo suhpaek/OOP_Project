@@ -1,12 +1,12 @@
 package services;
 
-import communication.News;
+import models.communication.News;
 import data.DataStore;
 import enums.NewsType;
 import exceptions.NonResearcherJoinProjectException;
-import research.ResearchPaper;
-import research.ResearchProject;
-import research.Researcher;
+import models.research.ResearchPaper;
+import models.research.ResearchProject;
+import models.research.Researcher;
 
 import java.util.Comparator;
 import java.util.List;

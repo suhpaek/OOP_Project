@@ -1,8 +1,8 @@
 package services;
 
-import academic.Course;
-import academic.Mark;
-import academic.Transcript;
+import models.academic.Course;
+import models.academic.Mark;
+import models.academic.Transcript;
 
 import java.util.ArrayList;
 import java.util.List;

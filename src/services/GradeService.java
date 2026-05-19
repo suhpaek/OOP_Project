@@ -1,9 +1,9 @@
 package services;
 
-import academic.Course;
-import academic.Mark;
-import users.Student;
-import users.Teacher;
+import models.academic.Course;
+import models.academic.Mark;
+import models.users.Student;
+import models.users.Teacher;
 
 public class GradeService {
     public void putMark(Teacher teacher, Course course, Student student, Mark mark) {

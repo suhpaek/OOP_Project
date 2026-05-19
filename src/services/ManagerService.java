@@ -1,9 +1,9 @@
 package services;
 
-import academic.RegistrationRequest;
+import models.academic.RegistrationRequest;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
-import users.Manager;
+import models.users.Manager;
 
 public class ManagerService {
     private final CourseService courseService;

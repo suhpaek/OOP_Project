@@ -1,12 +1,12 @@
 package services;
 
-import academic.Course;
-import academic.Lesson;
+import models.academic.Course;
+import models.academic.Lesson;
 import data.DataStore;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
-import users.Student;
-import users.Teacher;
+import models.users.Student;
+import models.users.Teacher;
 
 public class CourseService {
     private final DataStore dataStore;

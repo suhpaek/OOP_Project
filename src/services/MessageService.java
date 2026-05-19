@@ -1,8 +1,8 @@
 package services;
 
-import communication.Message;
+import models.communication.Message;
 import data.DataStore;
-import users.Employee;
+import models.users.Employee;
 
 import java.util.ArrayList;
 import java.util.List;

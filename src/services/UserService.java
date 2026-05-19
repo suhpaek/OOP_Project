@@ -1,7 +1,7 @@
 package services;
 
-import users.Teacher;
-import users.User;
+import models.users.Teacher;
+import models.users.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
