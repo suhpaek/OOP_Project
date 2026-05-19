@@ -38,10 +38,20 @@ public class ManagerService {
         if (manager == null || request == null || request.isProcessed()) return;
         courseService.enrollStudent(request.getCourse(), request.getStudent());
         request.markApproved(manager);
+        saveData();
     }
 
     public void rejectRegistration(Manager manager, RegistrationRequest request) {
         if (manager == null || request == null || request.isProcessed()) return;
         request.markRejected(manager);
+        saveData();
+    }
+
+    private void saveData() {
+        try {
+            dataStore.save();
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not save registration changes.", e);
+        }
     }
 }

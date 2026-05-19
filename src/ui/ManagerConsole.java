@@ -2,10 +2,12 @@ package ui;
 
 import data.DataStore;
 import enums.CourseType;
+import models.academic.RegistrationRequest;
 import models.users.Manager;
 import services.CourseService;
 import services.ManagerService;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class ManagerConsole {
@@ -31,6 +33,9 @@ public class ManagerConsole {
                 case "2":
                     changeRegistrationStatus();
                     break;
+                case "3":
+                    processRegistrationRequests();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -47,6 +52,7 @@ public class ManagerConsole {
         System.out.println("Course registration: " + (managerService.isCourseRegistrationOpen() ? "OPEN" : "CLOSED"));
         System.out.println("1. Add course");
         System.out.println("2. Open/close course registration");
+        System.out.println("3. View/approve registration requests");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -80,6 +86,37 @@ public class ManagerConsole {
             System.out.println("Course registration is now " + (open ? "OPEN." : "CLOSED."));
         } catch (Exception e) {
             System.out.println("Could not change registration status: " + e.getMessage());
+        }
+    }
+
+    private void processRegistrationRequests() {
+        List<RegistrationRequest> requests = DataStore.getInstance().getRegistrationRequests();
+        if (requests.isEmpty()) {
+            System.out.println("No registration requests.");
+            return;
+        }
+
+        for (int i = 0; i < requests.size(); i++) {
+            RegistrationRequest request = requests.get(i);
+            System.out.printf("%d. %s -> %s | processed=%s approved=%s%n",
+                    i + 1,
+                    request.getStudent().getUsername(),
+                    request.getCourse().getCode(),
+                    request.isProcessed(),
+                    request.isApproved());
+        }
+
+        try {
+            System.out.print("Request number (0 to cancel): ");
+            int index = Integer.parseInt(scanner.nextLine().trim()) - 1;
+            if (index < 0) return;
+            System.out.print("Approve? (yes/no): ");
+            boolean approve = scanner.nextLine().trim().equalsIgnoreCase("yes");
+            if (approve) managerService.approveRegistration(manager, requests.get(index));
+            else managerService.rejectRegistration(manager, requests.get(index));
+            System.out.println("Request processed.");
+        } catch (Exception e) {
+            System.out.println("Could not process request: " + e.getMessage());
         }
     }
 }
