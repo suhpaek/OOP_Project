@@ -3,17 +3,24 @@ package pattern.factory;
 import models.users.*;
 
 public class ConcreteUserFactory extends UserFactory {
+
     @Override
     public User createUser(String userType) {
         switch (userType) {
-            case "Student": return new Student();
-            case "Teacher": return new Teacher();
-            case "Manager": return new Manager();
-            case "Admin": return new Admin();
+            case "Student":
+                return new Student();
+            case "Teacher":
+                return new Teacher();
+            case "Manager":
+                return new Manager();
+            case "Admin":
+                return new Admin();
             // There is no User subclass for TechSupportSpecialist in models.users
             // Map TechSupportSpecialist registration to Employee by default
-            case "TechSupportSpecialist": return new Employee();
-            default: throw new IllegalArgumentException("Unknown user type: " + userType);
+            case "TechSupportSpecialist":
+                return new Employee();
+            default:
+                throw new IllegalArgumentException("Unknown user type: " + userType);
         }
     }
 }
