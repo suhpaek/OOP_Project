@@ -5,6 +5,7 @@ import models.communication.News;
 import data.DataStore;
 import enums.NewsType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -18,6 +19,7 @@ public class NewsService {
         if (title == null || title.isBlank() || content == null || content.isBlank() || type == null) return null;
         News news = new News(Math.abs((title + System.nanoTime()).hashCode()), title, content, type);
         dataStore.addNews(news);
+        saveData();
         return news;
     }
 
@@ -41,5 +43,13 @@ public class NewsService {
                     + "\n" + item.getContent());
         }
         return rows;
+    }
+
+    private void saveData() {
+        try {
+            dataStore.save();
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not save news.", e);
+        }
     }
 }

@@ -2,6 +2,7 @@ package ui;
 
 import data.DataStore;
 import enums.CourseType;
+import enums.NewsType;
 import models.academic.RegistrationRequest;
 import models.users.Manager;
 import services.CourseService;
@@ -44,6 +45,9 @@ public class ManagerConsole {
                 case "5":
                     viewNews();
                     break;
+                case "6":
+                    publishNews();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -63,6 +67,7 @@ public class ManagerConsole {
         System.out.println("3. View/approve registration requests");
         System.out.println("4. Assign course to teacher");
         System.out.println("5. View news");
+        System.out.println("6. Publish news");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -154,6 +159,21 @@ public class ManagerConsole {
         for (String item : news) {
             System.out.println(item);
             System.out.println();
+        }
+    }
+
+    private void publishNews() {
+        try {
+            System.out.print("Title: ");
+            String title = scanner.nextLine();
+            System.out.print("Content: ");
+            String content = scanner.nextLine();
+            System.out.print("Type (GENERAL/RESEARCH): ");
+            NewsType type = NewsType.valueOf(scanner.nextLine().trim().toUpperCase());
+            newsService.publish(title, content, type);
+            System.out.println("News published.");
+        } catch (Exception e) {
+            System.out.println("Could not publish news: " + e.getMessage());
         }
     }
 }
