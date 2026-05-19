@@ -6,6 +6,7 @@ import models.academic.RegistrationRequest;
 import models.users.Manager;
 import services.CourseService;
 import services.ManagerService;
+import services.NewsService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class ManagerConsole {
     private final Manager manager;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
     private final ManagerService managerService = new ManagerService(DataStore.getInstance(), courseService);
+    private final NewsService newsService = new NewsService(DataStore.getInstance());
 
     public ManagerConsole(Scanner scanner, Manager manager) {
         this.scanner = scanner;
@@ -39,6 +41,9 @@ public class ManagerConsole {
                 case "4":
                     assignTeacher();
                     break;
+                case "5":
+                    viewNews();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -57,6 +62,7 @@ public class ManagerConsole {
         System.out.println("2. Open/close course registration");
         System.out.println("3. View/approve registration requests");
         System.out.println("4. Assign course to teacher");
+        System.out.println("5. View news");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -136,6 +142,18 @@ public class ManagerConsole {
             System.out.println("Teacher assigned.");
         } catch (Exception e) {
             System.out.println("Could not assign teacher: " + e.getMessage());
+        }
+    }
+
+    private void viewNews() {
+        List<String> news = newsService.getFormattedNews();
+        if (news.isEmpty()) {
+            System.out.println("No news found.");
+            return;
+        }
+        for (String item : news) {
+            System.out.println(item);
+            System.out.println();
         }
     }
 }
