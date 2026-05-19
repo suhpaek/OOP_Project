@@ -4,6 +4,7 @@ import data.DataStore;
 import models.academic.Course;
 import models.users.Teacher;
 import services.CourseService;
+import services.GradeService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +13,7 @@ public class TeacherConsole {
     private final Scanner scanner;
     private final Teacher teacher;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
+    private final GradeService gradeService = new GradeService();
 
     public TeacherConsole(Scanner scanner, Teacher teacher) {
         this.scanner = scanner;
@@ -27,6 +29,9 @@ public class TeacherConsole {
                 case "1":
                     viewAssignedCourses();
                     break;
+                case "2":
+                    putMark();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -41,6 +46,7 @@ public class TeacherConsole {
         System.out.println("===== TEACHER MENU =====");
         System.out.println("Welcome, " + teacher.getFullName());
         System.out.println("1. View assigned courses");
+        System.out.println("2. Put mark");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -59,6 +65,25 @@ public class TeacherConsole {
                     course.getName(),
                     course.getCredits(),
                     course.getCourseType());
+        }
+    }
+
+    private void putMark() {
+        try {
+            System.out.print("Student username: ");
+            String studentUsername = scanner.nextLine();
+            System.out.print("Course code: ");
+            String courseCode = scanner.nextLine();
+            System.out.print("First attestation (0-30): ");
+            double first = Double.parseDouble(scanner.nextLine().trim());
+            System.out.print("Second attestation (0-30): ");
+            double second = Double.parseDouble(scanner.nextLine().trim());
+            System.out.print("Final exam (0-40): ");
+            double exam = Double.parseDouble(scanner.nextLine().trim());
+            gradeService.putMark(teacher, studentUsername, courseCode, first, second, exam);
+            System.out.println("Mark saved.");
+        } catch (Exception e) {
+            System.out.println("Could not put mark: " + e.getMessage());
         }
     }
 }
