@@ -6,6 +6,7 @@ import models.communication.Complaint;
 import models.communication.Message;
 import models.communication.News;
 import enums.NewsType;
+import models.organization.StudentOrganization;
 import models.research.ResearchPaper;
 import models.research.Researcher;
 import models.support.ActionLog;
@@ -32,6 +33,8 @@ public class DataStore {
     private final List<TechSupportRequest> supportRequests = new ArrayList<>();
     private final List<Course> courses = new ArrayList<>();
     private final List<RegistrationRequest> registrationRequests = new ArrayList<>();
+    private final List<Researcher> researchers = new ArrayList<>();
+    private final List<StudentOrganization> studentOrganizations = new ArrayList<>();
     private boolean courseRegistrationOpen;
 
     private DataStore() {
@@ -153,6 +156,22 @@ public class DataStore {
         return new ArrayList<>(registrationRequests);
     }
 
+    public void addResearcher(Researcher researcher) {
+        if (researcher != null && !researchers.contains(researcher)) researchers.add(researcher);
+    }
+
+    public List<Researcher> getResearchers() {
+        return new ArrayList<>(researchers);
+    }
+
+    public void addStudentOrganization(StudentOrganization organization) {
+        if (organization != null && !studentOrganizations.contains(organization)) studentOrganizations.add(organization);
+    }
+
+    public List<StudentOrganization> getStudentOrganizations() {
+        return new ArrayList<>(studentOrganizations);
+    }
+
     public boolean isCourseRegistrationOpen() {
         return courseRegistrationOpen;
     }
@@ -203,6 +222,8 @@ public class DataStore {
             outputStream.writeObject(registrationRequests);
             outputStream.writeBoolean(courseRegistrationOpen);
             outputStream.writeObject(supportRequests);
+            outputStream.writeObject(researchers);
+            outputStream.writeObject(studentOrganizations);
         }
     }
 
@@ -225,6 +246,8 @@ public class DataStore {
                 registrationRequests.addAll((List<RegistrationRequest>) inputStream.readObject());
                 courseRegistrationOpen = inputStream.readBoolean();
                 supportRequests.addAll((List<TechSupportRequest>) inputStream.readObject());
+                researchers.addAll((List<Researcher>) inputStream.readObject());
+                studentOrganizations.addAll((List<StudentOrganization>) inputStream.readObject());
             } catch (EOFException ignored) {
             }
         } catch (InvalidClassException e) {
@@ -241,6 +264,8 @@ public class DataStore {
         supportRequests.clear();
         courses.clear();
         registrationRequests.clear();
+        researchers.clear();
+        studentOrganizations.clear();
         courseRegistrationOpen = false;
     }
 

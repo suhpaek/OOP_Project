@@ -4,11 +4,13 @@ import enums.CourseType;
 import enums.LessonType;
 import enums.NewsType;
 import models.academic.RegistrationRequest;
+import models.organization.StudentOrganization;
 import models.users.Manager;
 import models.users.Student;
 import services.CourseService;
 import services.ManagerService;
 import services.NewsService;
+import services.OrganizationService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -19,6 +21,7 @@ public class ManagerConsole {
     private final CourseService courseService = new CourseService();
     private final ManagerService managerService = new ManagerService(courseService);
     private final NewsService newsService = new NewsService();
+    private final OrganizationService organizationService = new OrganizationService();
 
     public ManagerConsole(Scanner scanner, Manager manager) {
         this.scanner = scanner;
@@ -58,6 +61,9 @@ public class ManagerConsole {
                 case "9":
                     createAcademicReport();
                     break;
+                case "10":
+                    organizationMenu();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -81,8 +87,66 @@ public class ManagerConsole {
         System.out.println("7. Add lesson to course");
         System.out.println("8. View students");
         System.out.println("9. Create academic report");
+        System.out.println("10. Student organizations");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
+    }
+
+    private void organizationMenu() {
+        boolean running = true;
+        while (running) {
+            System.out.println();
+            System.out.println("===== STUDENT ORGANIZATIONS =====");
+            System.out.println("1. View organizations");
+            System.out.println("2. Create organization");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    viewOrganizations();
+                    break;
+                case "2":
+                    createOrganization();
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void viewOrganizations() {
+        List<StudentOrganization> organizations = organizationService.getAllOrganizations();
+        if (organizations.isEmpty()) {
+            System.out.println("No organizations found.");
+            return;
+        }
+        System.out.printf("%-24s %-8s %-36s %s%n", "Name", "Members", "Head ID", "Description");
+        for (StudentOrganization organization : organizations) {
+            System.out.printf("%-24s %-8d %-36s %s%n",
+                    organization.getName(),
+                    organization.getMemberStudentIds().size(),
+                    safe(organization.getHeadStudentId()),
+                    safe(organization.getDescription()));
+        }
+    }
+
+    private void createOrganization() {
+        try {
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+            System.out.print("Description: ");
+            String description = scanner.nextLine();
+            System.out.print("Head student username (optional): ");
+            String headUsername = scanner.nextLine().trim();
+            organizationService.createOrganization(name, description, headUsername);
+            System.out.println("Organization created.");
+        } catch (Exception e) {
+            System.out.println("Could not create organization: " + e.getMessage());
+        }
     }
 
     private void addCourse() {
@@ -232,5 +296,9 @@ public class ManagerConsole {
 
     private void createAcademicReport() {
         System.out.println(managerService.createAcademicReport(manager));
+    }
+
+    private String safe(String value) {
+        return value == null || value.isBlank() ? "-" : value;
     }
 }

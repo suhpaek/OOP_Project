@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import models.academic.Course;
+import models.organization.StudentOrganization;
 import models.users.Student;
 import services.CourseService;
 import services.GradeService;
 import services.NewsService;
+import services.OrganizationService;
 import services.TranscriptService;
 import services.UserService;
 
@@ -18,6 +20,7 @@ public class StudentConsole {
     private final CourseService courseService = new CourseService();
     private final GradeService gradeService = new GradeService();
     private final NewsService newsService = new NewsService();
+    private final OrganizationService organizationService = new OrganizationService();
     private final TranscriptService transcriptService = new TranscriptService();
     private final UserService userService = new UserService();
 
@@ -62,6 +65,12 @@ public class StudentConsole {
                 case "10":
                     viewSchedule();
                     break;
+                case "11":
+                    new ResearchConsole(scanner, student).start();
+                    break;
+                case "12":
+                    organizationMenu();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -85,8 +94,79 @@ public class StudentConsole {
         System.out.println("8. Rate teacher");
         System.out.println("9. View news");
         System.out.println("10. View schedule");
+        System.out.println("11. Research menu");
+        System.out.println("12. Student organizations");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
+    }
+
+    private void organizationMenu() {
+        boolean running = true;
+        while (running) {
+            System.out.println();
+            System.out.println("===== STUDENT ORGANIZATIONS =====");
+            System.out.println("1. View all organizations");
+            System.out.println("2. View my organizations");
+            System.out.println("3. Join organization");
+            System.out.println("4. Leave organization");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    printOrganizations(organizationService.getAllOrganizations());
+                    break;
+                case "2":
+                    printOrganizations(organizationService.getOrganizationsForStudent(student));
+                    break;
+                case "3":
+                    joinOrganization();
+                    break;
+                case "4":
+                    leaveOrganization();
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void joinOrganization() {
+        try {
+            System.out.print("Organization name: ");
+            organizationService.joinOrganization(student, scanner.nextLine().trim());
+            System.out.println("Joined organization.");
+        } catch (Exception e) {
+            System.out.println("Could not join organization: " + e.getMessage());
+        }
+    }
+
+    private void leaveOrganization() {
+        try {
+            System.out.print("Organization name: ");
+            organizationService.leaveOrganization(student, scanner.nextLine().trim());
+            System.out.println("Left organization.");
+        } catch (Exception e) {
+            System.out.println("Could not leave organization: " + e.getMessage());
+        }
+    }
+
+    private void printOrganizations(List<StudentOrganization> organizations) {
+        if (organizations.isEmpty()) {
+            System.out.println("No organizations found.");
+            return;
+        }
+        System.out.printf("%-24s %-8s %-36s %s%n", "Name", "Members", "Head ID", "Description");
+        for (StudentOrganization organization : organizations) {
+            System.out.printf("%-24s %-8d %-36s %s%n",
+                    organization.getName(),
+                    organization.getMemberStudentIds().size(),
+                    safe(organization.getHeadStudentId()),
+                    safe(organization.getDescription()));
+        }
     }
 
     private void viewAvailableCourses() {
@@ -217,5 +297,9 @@ public class StudentConsole {
             System.out.println(item);
             System.out.println();
         }
+    }
+
+    private String safe(String value) {
+        return value == null || value.isBlank() ? "-" : value;
     }
 }

@@ -53,6 +53,9 @@ public class TeacherConsole {
                 case "7":
                     viewInbox();
                     break;
+                case "8":
+                    new ResearchConsole(scanner, teacher).start();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -73,6 +76,7 @@ public class TeacherConsole {
         System.out.println("5. Send complaint");
         System.out.println("6. Send message");
         System.out.println("7. View inbox");
+        System.out.println("8. Research menu");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }

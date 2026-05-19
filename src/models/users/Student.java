@@ -127,6 +127,13 @@ public class Student extends User {
         }
     }
 
+    public void leaveOrganization(String organizationName) {
+        studentOrganizations.remove(organizationName);
+        if (organizationName != null && organizationName.equals(headedOrganization)) {
+            headedOrganization = null;
+        }
+    }
+
     public void leadOrganization(String organizationName) {
         joinOrganization(organizationName);
         this.headedOrganization = organizationName;
