@@ -7,6 +7,7 @@ import exceptions.UserNotFoundException;
 import models.research.Researcher;
 import models.support.ActionLog;
 import models.users.*;
+import pattern.factory.ConcreteUserFactory;
 
 import java.io.File;
 import java.util.Date;
@@ -20,6 +21,16 @@ public class AdminService {
 
     public void addUser(Admin admin, User user) { dataStore.addUser(user); addLog(user, admin, "Added user"); }
     public void updateUser(Admin admin, User user) { dataStore.updateUser(user); addLog(user, admin, "Updated user"); }
+
+    public User createUser(Admin admin, String role, String username, String password,
+                           String firstName, String lastName, String email) {
+        User user = new ConcreteUserFactory().createUser(role);
+        user.updateProfile(username, firstName, lastName, null, null);
+        user.changePassword(password);
+        user.updateEmail(email);
+        addUser(admin, user);
+        return user;
+    }
 
     public void updateUserProfile(Admin admin, User user, String username, String firstName, String lastName,
                                   Gender gender, Date dateOfBirth) {

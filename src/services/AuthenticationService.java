@@ -60,7 +60,7 @@ public class AuthenticationService {
         dataStore.updateUser(user);
         dataStore.addLog(new ActionLog(user.getId(), user.getId(), "Logged out"));
         saveData();
-        System.out.println(I18n.t("auth.logout.success"));
+        System.out.println(I18n.t("auth.logout"));
     }
 
     public void selectInterfaceLanguage(User user, Language language) throws AuthenticationException {

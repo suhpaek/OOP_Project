@@ -1,6 +1,7 @@
 package data;
 
 import models.academic.Course;
+import models.academic.RegistrationRequest;
 import models.communication.Complaint;
 import models.communication.Message;
 import models.communication.News;
@@ -8,6 +9,7 @@ import enums.NewsType;
 import models.research.ResearchPaper;
 import models.research.Researcher;
 import models.support.ActionLog;
+import models.users.Admin;
 import models.users.Student;
 import models.users.User;
 
@@ -27,6 +29,8 @@ public class DataStore {
     private final List<Message> messages = new ArrayList<>();
     private final List<Complaint> complaints = new ArrayList<>();
     private final List<Course> courses = new ArrayList<>();
+    private final List<RegistrationRequest> registrationRequests = new ArrayList<>();
+    private boolean courseRegistrationOpen;
 
     private DataStore() {
     }
@@ -129,6 +133,36 @@ public class DataStore {
         return new ArrayList<>(courses);
     }
 
+    public void addRegistrationRequest(RegistrationRequest request) {
+        if (request != null && !registrationRequests.contains(request)) {
+            registrationRequests.add(request);
+        }
+    }
+
+    public List<RegistrationRequest> getRegistrationRequests() {
+        return new ArrayList<>(registrationRequests);
+    }
+
+    public boolean isCourseRegistrationOpen() {
+        return courseRegistrationOpen;
+    }
+
+    public void setCourseRegistrationOpen(boolean courseRegistrationOpen) {
+        this.courseRegistrationOpen = courseRegistrationOpen;
+    }
+
+    public void ensureDefaultAdmin() {
+        try {
+            User user = findUserByUsername("admin");
+            user.changePassword("admin");
+            user.setActive(true);
+            return;
+        } catch (exceptions.UserNotFoundException ignored) {
+        }
+
+        addUser(new Admin("admin", "admin", "System", "Admin", "admin@university.kz"));
+    }
+
     public void publishResearchPaper(Researcher researcher, ResearchPaper paper) {
         researcher.publishPaper(paper);
     }
@@ -154,6 +188,8 @@ public class DataStore {
             outputStream.writeObject(messages);
             outputStream.writeObject(complaints);
             outputStream.writeObject(courses);
+            outputStream.writeObject(registrationRequests);
+            outputStream.writeBoolean(courseRegistrationOpen);
         }
     }
 
@@ -171,12 +207,19 @@ public class DataStore {
             messages.clear();
             complaints.clear();
             courses.clear();
+            registrationRequests.clear();
             users.addAll((List<User>) inputStream.readObject());
             logs.addAll((List<ActionLog>) inputStream.readObject());
             news.addAll((List<News>) inputStream.readObject());
             messages.addAll((List<Message>) inputStream.readObject());
             complaints.addAll((List<Complaint>) inputStream.readObject());
             courses.addAll((List<Course>) inputStream.readObject());
+            try {
+                registrationRequests.addAll((List<RegistrationRequest>) inputStream.readObject());
+                courseRegistrationOpen = inputStream.readBoolean();
+            } catch (EOFException ignored) {
+                courseRegistrationOpen = false;
+            }
         }
     }
 }
