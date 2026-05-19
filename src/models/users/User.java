@@ -173,8 +173,4 @@ public abstract class User implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public void update(String message) {
-        System.out.println("User " + this.username + " received notification: " + message);
-    }
 }

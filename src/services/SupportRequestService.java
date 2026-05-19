@@ -21,7 +21,12 @@ public class SupportRequestService {
     public List<TechSupportRequest> viewNewRequests(TechSupportSpecialist specialist) {
         List<TechSupportRequest> result = new ArrayList<>();
         if (specialist == null) return result;
-        for (TechSupportRequest request : specialist.viewNewRequests()) result.add(request);
+        for (TechSupportRequest request : specialist.getRequests()) {
+            if (request.getStatus() == RequestStatus.NEW) {
+                request.markViewed();
+                result.add(request);
+            }
+        }
         return result;
     }
 

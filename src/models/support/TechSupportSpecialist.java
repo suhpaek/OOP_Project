@@ -1,9 +1,8 @@
 package models.support;
 
-import enums.RequestStatus;
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TechSupportSpecialist implements Serializable {
@@ -17,30 +16,11 @@ public class TechSupportSpecialist implements Serializable {
         this.requests = new ArrayList<>();
     }
 
-    public List<TechSupportRequest> viewNewRequests() {
-        List<TechSupportRequest> newRequests = new ArrayList<>();
-        for (TechSupportRequest request : requests) {
-            if (request.getStatus() == RequestStatus.NEW) {
-                request.markViewed();
-                newRequests.add(request);
-            }
-        }
-        return newRequests;
-    }
-
-    public void acceptRequest(TechSupportRequest request) {
-        request.setStatus(RequestStatus.ACCEPTED);
-    }
-
-    public void rejectRequest(TechSupportRequest request) {
-        request.setStatus(RequestStatus.REJECTED);
-    }
-
-    public void completeRequest(TechSupportRequest request) {
-        request.setStatus(RequestStatus.DONE);
-    }
-
     public void addRequest(TechSupportRequest request) {
         requests.add(request);
+    }
+
+    public List<TechSupportRequest> getRequests() {
+        return Collections.unmodifiableList(requests);
     }
 }

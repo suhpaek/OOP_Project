@@ -1,13 +1,7 @@
 package models.users;
 
 import models.academic.Course;
-import models.academic.RegistrationRequest;
-import data.DataStore;
 import enums.ManagerType;
-import exceptions.CreditLimitExceededException;
-import exceptions.TooManyFailedCoursesException;
-import comparators.StudentGpaComparator;
-import comparators.StudentNameComparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,46 +39,5 @@ public class Manager extends Employee {
 
     public List<Course> getCoursesForRegistration() {
         return coursesForRegistration;
-    }
-
-    public void assignCourseToTeacher(Course course, Teacher teacher, boolean lecture) {
-        teacher.assignCourse(course);
-        if (lecture) {
-            course.setLectureTeacher(teacher);
-        } else {
-            course.setPracticeTeacher(teacher);
-        }
-    }
-
-    public void approveRegistration(RegistrationRequest request) throws CreditLimitExceededException, TooManyFailedCoursesException {
-        request.approve(this);
-    }
-
-    public void rejectRegistration(RegistrationRequest request) {
-        request.reject(this);
-    }
-
-
-    public List<Student> viewStudentsByName() {
-        List<Student> students = DataStore.getInstance().getStudents();
-        students.sort(new StudentNameComparator());
-        return students;
-    }
-
-    public List<Student> viewStudentsByGpa() {
-        List<Student> students = DataStore.getInstance().getStudents();
-        students.sort(new StudentGpaComparator());
-        return students;
-    }
-
-    public String createAcademicReport() {
-        StringBuilder builder = new StringBuilder("Academic performance report:\n");
-        for (Student student : viewStudentsByGpa()) {
-            builder.append(student.getFullName())
-                    .append(" - GPA: ")
-                    .append(String.format("%.2f", student.getTranscript().calculateGpa()))
-                    .append('\n');
-        }
-        return builder.toString();
     }
 }

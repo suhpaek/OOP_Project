@@ -1,13 +1,16 @@
 package services;
 
+import comparators.StudentGpaComparator;
+import comparators.StudentNameComparator;
 import data.DataStore;
-import models.academic.RegistrationRequest;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
+import models.academic.RegistrationRequest;
 import models.users.Manager;
 import models.users.Student;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManagerService {
@@ -50,11 +53,26 @@ public class ManagerService {
     }
 
     public List<Student> viewStudentsByName(Manager manager) {
-        return manager.viewStudentsByName();
+        List<Student> students = new ArrayList<>(dataStore.getStudents());
+        students.sort(new StudentNameComparator());
+        return students;
     }
 
     public List<Student> viewStudentsByGpa(Manager manager) {
-        return manager.viewStudentsByGpa();
+        List<Student> students = new ArrayList<>(dataStore.getStudents());
+        students.sort(new StudentGpaComparator());
+        return students;
+    }
+
+    public String createAcademicReport(Manager manager) {
+        StringBuilder builder = new StringBuilder("Academic performance report:\n");
+        for (Student student : viewStudentsByGpa(manager)) {
+            builder.append(student.getFullName())
+                    .append(" - GPA: ")
+                    .append(String.format("%.2f", student.getTranscript().calculateGpa()))
+                    .append('\n');
+        }
+        return builder.toString();
     }
 
     private void saveData() {

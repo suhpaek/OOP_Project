@@ -88,7 +88,6 @@ public class Student extends User {
             throw new IllegalArgumentException("Course must not be null");
         }
         if (registeredCourses.contains(course)) {
-            System.out.println("Student is already registered for this course.");
             return;
         }
 
@@ -120,44 +119,6 @@ public class Student extends User {
         } else if ((previousMark == null || previousMark.isPassed()) && !mark.isPassed()) {
             failedCoursesCount++;
         }
-    }
-
-    public String viewMarks() {
-        StringBuilder builder = new StringBuilder();
-        for (Course course : registeredCourses) {
-            Mark mark = course.getMark(this);
-            builder.append(course.getName())
-                    .append(": ")
-                    .append(mark)
-                    .append('\n');
-        }
-        String output = builder.toString().trim();
-        System.out.println(output);
-        return output;
-    }
-
-    public String viewTranscript() {
-        String summary = transcript.getTranscriptSummary();
-        System.out.println(summary);
-        return summary;
-    }
-
-    public String viewCourses() {
-        StringBuilder builder = new StringBuilder();
-        for (Course course : registeredCourses) {
-            builder.append(course).append('\n');
-        }
-        String output = builder.toString().trim();
-        System.out.println(output);
-        return output;
-    }
-
-    public Teacher viewTeacherInfo(Course course, boolean lectureTeacher) {
-        return lectureTeacher ? course.getLectureTeacher() : course.getPracticeTeacher();
-    }
-
-    public void rateTeacher(Teacher teacher, int rating) {
-        teacher.addRating(rating);
     }
 
     public void joinOrganization(String organizationName) {

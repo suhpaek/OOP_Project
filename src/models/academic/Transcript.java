@@ -69,10 +69,6 @@ public class Transcript implements Serializable {
         return 0.0;
     }
 
-    public void printTranscript() {
-        System.out.println(getTranscriptSummary());
-    }
-
     public String getTranscriptSummary() {
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<Course, Mark> entry : courseMarks.entrySet()) {

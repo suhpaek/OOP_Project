@@ -1,8 +1,5 @@
 package models.research;
 
-import models.communication.News;
-import data.DataStore;
-import enums.NewsType;
 import exceptions.NonResearcherJoinProjectException;
 import models.users.User;
 
@@ -30,20 +27,6 @@ public class Researcher implements Serializable {
         this.user = user;
         this.papers = new ArrayList<>();
         this.projects = new ArrayList<>();
-    }
-
-    public void publishPaper(ResearchPaper paper) {
-        if (paper == null) return;
-        if (!papers.contains(paper)) {
-            papers.add(paper);
-        }
-        paper.addAuthor(this);
-        DataStore.getInstance().addNews(new News(
-                Math.abs((getId() + paper.getTitle()).hashCode()),
-                "New research paper: " + paper.getTitle(),
-                getName() + " published a paper in " + paper.getJournalName(),
-                NewsType.RESEARCH
-        ));
     }
 
     public void addPaper(ResearchPaper paper) {
@@ -82,7 +65,7 @@ public class Researcher implements Serializable {
         return hIndex;
     }
 
-    public List<ResearchPaper> printPapers(Comparator<ResearchPaper> comparator) {
+    public List<ResearchPaper> getPapersSorted(Comparator<ResearchPaper> comparator) {
         List<ResearchPaper> sortedPapers = new ArrayList<>(papers);
         sortedPapers.sort(comparator);
         return sortedPapers;
@@ -116,7 +99,7 @@ public class Researcher implements Serializable {
         return new ArrayList<>(projects);
     }
 
-    public static List<ResearchPaper> printAllPapers(List<ResearchPaper> papers, Comparator<ResearchPaper> comparator) {
+    public static List<ResearchPaper> getAllPapersSorted(List<ResearchPaper> papers, Comparator<ResearchPaper> comparator) {
         List<ResearchPaper> sortedPapers = new ArrayList<>(papers);
         sortedPapers.sort(comparator);
         return sortedPapers;

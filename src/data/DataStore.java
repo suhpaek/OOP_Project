@@ -164,7 +164,9 @@ public class DataStore {
     }
 
     public void publishResearchPaper(Researcher researcher, ResearchPaper paper) {
-        researcher.publishPaper(paper);
+        if (researcher != null && paper != null) {
+            researcher.addPaper(paper);
+        }
     }
 
     public News createTopCitedResearcherNews(List<Researcher> researchers) {
@@ -201,13 +203,7 @@ public class DataStore {
         }
 
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
-            users.clear();
-            logs.clear();
-            news.clear();
-            messages.clear();
-            complaints.clear();
-            courses.clear();
-            registrationRequests.clear();
+            clearAll();
             users.addAll((List<User>) inputStream.readObject());
             logs.addAll((List<ActionLog>) inputStream.readObject());
             news.addAll((List<News>) inputStream.readObject());
@@ -220,6 +216,19 @@ public class DataStore {
             } catch (EOFException ignored) {
                 courseRegistrationOpen = false;
             }
+        } catch (InvalidClassException e) {
+            clearAll();
         }
+    }
+
+    private void clearAll() {
+        users.clear();
+        logs.clear();
+        news.clear();
+        messages.clear();
+        complaints.clear();
+        courses.clear();
+        registrationRequests.clear();
+        courseRegistrationOpen = false;
     }
 }

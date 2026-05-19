@@ -30,5 +30,5 @@ public class ResearchService {
     }
 
     public int calculateHIndex(Researcher researcher) { return researcher == null ? 0 : researcher.calculateHIndex(); }
-    public List<ResearchPaper> sortPapers(Researcher researcher, Comparator<ResearchPaper> comparator) { return researcher.printPapers(comparator); }
+    public List<ResearchPaper> sortPapers(Researcher researcher, Comparator<ResearchPaper> comparator) { return researcher.getPapersSorted(comparator); }
 }

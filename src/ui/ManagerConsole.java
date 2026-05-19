@@ -56,6 +56,9 @@ public class ManagerConsole {
                 case "8":
                     viewStudents();
                     break;
+                case "9":
+                    createAcademicReport();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -78,6 +81,7 @@ public class ManagerConsole {
         System.out.println("6. Publish news");
         System.out.println("7. Add lesson to course");
         System.out.println("8. View students");
+        System.out.println("9. Create academic report");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -225,5 +229,9 @@ public class ManagerConsole {
                     student.getFullName(),
                     student.getTranscript().calculateGpa());
         }
+    }
+
+    private void createAcademicReport() {
+        System.out.println(managerService.createAcademicReport(manager));
     }
 }

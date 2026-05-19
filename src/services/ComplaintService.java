@@ -42,11 +42,7 @@ public class ComplaintService {
         if (!(user instanceof Student)) {
             throw new IllegalArgumentException("User is not a student.");
         }
-        Student student = (Student) user;
-        Complaint complaint = teacher.sendComplaint(student, text, urgency);
-        dataStore.addComplaint(complaint);
-        dataStore.save();
-        return complaint;
+        return createComplaint(teacher, (Student) user, text, urgency);
     }
 
     public List<Complaint> getAllComplaints() {
