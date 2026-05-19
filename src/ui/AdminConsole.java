@@ -40,6 +40,9 @@ public class AdminConsole {
                 case "4":
                     changeUserStatus();
                     break;
+                case "5":
+                    deleteUser();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -56,6 +59,7 @@ public class AdminConsole {
         System.out.println("2. Create user");
         System.out.println("3. View logs");
         System.out.println("4. Activate/deactivate user");
+        System.out.println("5. Delete user");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -122,6 +126,19 @@ public class AdminConsole {
             System.out.println("User status updated.");
         } catch (Exception e) {
             System.out.println("Could not update user status: " + e.getMessage());
+        }
+    }
+
+    private void deleteUser() {
+        try {
+            System.out.print("Username: ");
+            String username = scanner.nextLine().trim();
+            User user = store.findUserByUsername(username);
+            adminService.deleteUser(admin, user);
+            store.save();
+            System.out.println("User deleted.");
+        } catch (Exception e) {
+            System.out.println("Could not delete user: " + e.getMessage());
         }
     }
 
