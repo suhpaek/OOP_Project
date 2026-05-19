@@ -10,6 +10,8 @@ import models.users.Student;
 import models.users.Teacher;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseService {
     private final DataStore dataStore;
@@ -32,6 +34,17 @@ public class CourseService {
     public void enrollStudent(Course course, Student student) throws CreditLimitExceededException, TooManyFailedCoursesException {
         if (course != null && student != null) student.registerForCourse(course);
     }
+
+    public List<Course> getAvailableCourses(Student student) {
+        List<Course> result = new ArrayList<>();
+        for (Course course : dataStore.getCourses()) {
+            if (student == null || !student.getRegisteredCourses().contains(course)) {
+                result.add(course);
+            }
+        }
+        return result;
+    }
+
     public void dropStudent(Course course, Student student) { if (student != null) student.dropCourse(course); }
     public void setLectureTeacher(Course course, Teacher teacher) { if (course != null) course.setLectureTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
     public void setPracticeTeacher(Course course, Teacher teacher) { if (course != null) course.setPracticeTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
