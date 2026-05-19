@@ -10,6 +10,8 @@ import models.users.*;
 import pattern.factory.ConcreteUserFactory;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -73,6 +75,16 @@ public class AdminService {
     public User viewUserInfo(User user) throws UserNotFoundException { return dataStore.findUserById(user.getId()); }
     public void processLogFile(Admin admin, File logFile) { dataStore.addLog(new ActionLog(logFile.getName(), admin.getId(), "Processed log file")); }
     public List<ActionLog> readLogs() { return dataStore.getLogs(); }
+
+    public String exportLogs(String fileName) throws IOException {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            for (ActionLog log : dataStore.getLogs()) {
+                writer.write(log.getCreatedAt() + " | " + log.getActorId() + " | "
+                        + log.getId() + " | " + log.getAction() + System.lineSeparator());
+            }
+        }
+        return fileName;
+    }
 
     private void addLog(User target, Admin admin, String action) {
         if (target != null && admin != null) dataStore.addLog(new ActionLog(target.getId(), admin.getId(), action));

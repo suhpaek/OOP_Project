@@ -43,6 +43,9 @@ public class AdminConsole {
                 case "5":
                     deleteUser();
                     break;
+                case "6":
+                    exportLogs();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -60,6 +63,7 @@ public class AdminConsole {
         System.out.println("3. View logs");
         System.out.println("4. Activate/deactivate user");
         System.out.println("5. Delete user");
+        System.out.println("6. Export logs");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -139,6 +143,18 @@ public class AdminConsole {
             System.out.println("User deleted.");
         } catch (Exception e) {
             System.out.println("Could not delete user: " + e.getMessage());
+        }
+    }
+
+    private void exportLogs() {
+        try {
+            System.out.print("File name (default logs.txt): ");
+            String fileName = scanner.nextLine().trim();
+            if (fileName.isEmpty()) fileName = "logs.txt";
+            adminService.exportLogs(fileName);
+            System.out.println("Logs exported to " + fileName);
+        } catch (Exception e) {
+            System.out.println("Could not export logs: " + e.getMessage());
         }
     }
 

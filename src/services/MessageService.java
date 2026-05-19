@@ -7,6 +7,7 @@ import java.util.UUID;
 import data.DataStore;
 import models.communication.Message;
 import models.users.Employee;
+import models.users.User;
 
 public class MessageService {
 
@@ -29,6 +30,18 @@ public class MessageService {
         try {
             dataStore.save();
         } catch (Exception ignored) {
+        }
+        return message;
+    }
+
+    public Message sendMessageToUsername(Employee sender, String receiverUsername, String text) throws Exception {
+        User user = dataStore.findUserByUsername(receiverUsername);
+        if (!(user instanceof Employee)) {
+            throw new IllegalArgumentException("Receiver is not an employee.");
+        }
+        Message message = sendMessage(sender, (Employee) user, text);
+        if (message == null) {
+            throw new IllegalArgumentException("Message text is required.");
         }
         return message;
     }

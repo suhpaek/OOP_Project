@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import data.DataStore;
 import models.academic.Course;
-import models.users.Employee;
 import models.users.Teacher;
 import services.CourseService;
 import services.GradeService;
@@ -165,18 +164,8 @@ public class TeacherConsole {
             String receiverUsername = scanner.nextLine();
             System.out.print("Message text: ");
             String text = scanner.nextLine();
-            try {
-                models.users.User user = DataStore.getInstance().findUserByUsername(receiverUsername);
-                if (!(user instanceof Employee)) {
-                    System.out.println("Receiver is not an employee.");
-                    return;
-                }
-                Employee receiver = (Employee) user;
-                messageService.sendMessage(teacher, receiver, text);
-                System.out.println("Message sent.");
-            } catch (Exception e) {
-                System.out.println("Could not find receiver: " + e.getMessage());
-            }
+            messageService.sendMessageToUsername(teacher, receiverUsername, text);
+            System.out.println("Message sent.");
         } catch (Exception e) {
             System.out.println("Could not send message: " + e.getMessage());
         }
