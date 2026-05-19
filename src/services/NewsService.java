@@ -5,6 +5,8 @@ import models.communication.News;
 import data.DataStore;
 import enums.NewsType;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class NewsService {
@@ -27,4 +29,17 @@ public class NewsService {
     }
 
     public List<News> getNews() { return dataStore.getNews(); }
+
+    public List<String> getFormattedNews() {
+        List<News> news = dataStore.getNews();
+        news.sort(Comparator.comparing(News::isPinned).reversed()
+                .thenComparing(News::getCreatedAt).reversed());
+        List<String> rows = new ArrayList<>();
+        for (News item : news) {
+            rows.add((item.isPinned() ? "[PINNED] " : "")
+                    + item.getTopic() + " | " + item.getTitle()
+                    + "\n" + item.getContent());
+        }
+        return rows;
+    }
 }

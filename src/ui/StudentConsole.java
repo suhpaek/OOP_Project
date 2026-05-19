@@ -5,6 +5,7 @@ import models.academic.Course;
 import models.users.Student;
 import services.CourseService;
 import services.GradeService;
+import services.NewsService;
 import services.TranscriptService;
 import services.UserService;
 
@@ -16,6 +17,7 @@ public class StudentConsole {
     private final Student student;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
     private final GradeService gradeService = new GradeService();
+    private final NewsService newsService = new NewsService(DataStore.getInstance());
     private final TranscriptService transcriptService = new TranscriptService();
     private final UserService userService = new UserService();
 
@@ -54,6 +56,9 @@ public class StudentConsole {
                 case "8":
                     rateTeacher();
                     break;
+                case "9":
+                    viewNews();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -75,6 +80,7 @@ public class StudentConsole {
         System.out.println("6. Get transcript");
         System.out.println("7. View teacher info");
         System.out.println("8. Rate teacher");
+        System.out.println("9. View news");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -171,6 +177,18 @@ public class StudentConsole {
             System.out.println("Teacher rated.");
         } catch (Exception e) {
             System.out.println("Could not rate teacher: " + e.getMessage());
+        }
+    }
+
+    private void viewNews() {
+        List<String> news = newsService.getFormattedNews();
+        if (news.isEmpty()) {
+            System.out.println("No news found.");
+            return;
+        }
+        for (String item : news) {
+            System.out.println(item);
+            System.out.println();
         }
     }
 }
