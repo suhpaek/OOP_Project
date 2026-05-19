@@ -2,6 +2,9 @@ package ui;
 
 import data.DataStore;
 import models.users.Admin;
+import models.users.Manager;
+import models.users.Student;
+import models.users.Teacher;
 import models.users.User;
 import services.AuthenticationService;
 
@@ -60,11 +63,16 @@ public class ConsoleApplication {
 
         if (user instanceof Admin) {
             new AdminConsole(scanner, (Admin) user).start();
-            logout(user);
+        } else if (user instanceof Manager) {
+            new ManagerConsole(scanner, (Manager) user).start();
+        } else if (user instanceof Teacher) {
+            new TeacherConsole(scanner, (Teacher) user).start();
+        } else if (user instanceof Student) {
+            new StudentConsole(scanner, (Student) user).start();
         } else {
             System.out.println("Console menu for " + user.getClass().getSimpleName() + " is not implemented yet.");
-            logout(user);
         }
+        logout(user);
     }
 
     private void logout(User user) {
