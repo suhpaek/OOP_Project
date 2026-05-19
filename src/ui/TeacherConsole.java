@@ -41,6 +41,9 @@ public class TeacherConsole {
                 case "4":
                     viewStudentsInCourse();
                     break;
+                case "5":
+                    sendComplaint();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -58,6 +61,7 @@ public class TeacherConsole {
         System.out.println("2. Put mark");
         System.out.println("3. View news");
         System.out.println("4. View students in course");
+        System.out.println("5. Send complaint");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -125,6 +129,22 @@ public class TeacherConsole {
             }
         } catch (Exception e) {
             System.out.println("Could not retrieve students: " + e.getMessage());
+        }
+    }
+
+    private void sendComplaint() {
+        try {
+            System.out.print("Student username: ");
+            String studentUsername = scanner.nextLine();
+            System.out.print("Complaint text: ");
+            String text = scanner.nextLine();
+            System.out.print("Urgency (LOW/MEDIUM/HIGH): ");
+            enums.UrgencyLevel urgency = enums.UrgencyLevel.valueOf(scanner.nextLine().trim().toUpperCase());
+            services.ComplaintService complaintService = new services.ComplaintService(data.DataStore.getInstance());
+            complaintService.createComplaintByUsername(teacher, studentUsername, text, urgency);
+            System.out.println("Complaint sent.");
+        } catch (Exception e) {
+            System.out.println("Could not send complaint: " + e.getMessage());
         }
     }
 }
