@@ -2,6 +2,7 @@ package services;
 
 import models.academic.Course;
 import models.academic.Lesson;
+import models.academic.RegistrationRequest;
 import data.DataStore;
 import enums.CourseType;
 import exceptions.CreditLimitExceededException;
@@ -43,6 +44,28 @@ public class CourseService {
             }
         }
         return result;
+    }
+
+    public RegistrationRequest createRegistrationRequest(Student student, String courseCode) throws IOException {
+        if (!dataStore.isCourseRegistrationOpen()) {
+            throw new IllegalStateException("Course registration is closed.");
+        }
+        Course course = findCourseByCode(courseCode);
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found.");
+        }
+        RegistrationRequest request = new RegistrationRequest(student, course);
+        dataStore.addRegistrationRequest(request);
+        dataStore.save();
+        return request;
+    }
+
+    public Course findCourseByCode(String code) {
+        if (code == null) return null;
+        for (Course course : dataStore.getCourses()) {
+            if (course.getCode().equalsIgnoreCase(code.trim())) return course;
+        }
+        return null;
     }
 
     public void dropStudent(Course course, Student student) { if (student != null) student.dropCourse(course); }

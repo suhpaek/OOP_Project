@@ -27,6 +27,9 @@ public class StudentConsole {
                 case "1":
                     viewAvailableCourses();
                     break;
+                case "2":
+                    createRegistrationRequest();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -41,6 +44,7 @@ public class StudentConsole {
         System.out.println("===== STUDENT MENU =====");
         System.out.println("Welcome, " + student.getFullName());
         System.out.println("1. View available courses");
+        System.out.println("2. Create course registration request");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -60,6 +64,17 @@ public class StudentConsole {
                     course.getCredits(),
                     course.getCourseType(),
                     course.getIntendedYearOfStudy());
+        }
+    }
+
+    private void createRegistrationRequest() {
+        try {
+            System.out.print("Course code: ");
+            String code = scanner.nextLine();
+            courseService.createRegistrationRequest(student, code);
+            System.out.println("Registration request created. Wait for manager approval.");
+        } catch (Exception e) {
+            System.out.println("Could not create request: " + e.getMessage());
         }
     }
 }
