@@ -1,5 +1,8 @@
 package ui;
 
+import java.util.List;
+import java.util.Scanner;
+
 import data.DataStore;
 import models.academic.Course;
 import models.users.Teacher;
@@ -7,10 +10,8 @@ import services.CourseService;
 import services.GradeService;
 import services.NewsService;
 
-import java.util.List;
-import java.util.Scanner;
-
 public class TeacherConsole {
+
     private final Scanner scanner;
     private final Teacher teacher;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
@@ -37,6 +38,9 @@ public class TeacherConsole {
                 case "3":
                     viewNews();
                     break;
+                case "4":
+                    viewStudentsInCourse();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -53,6 +57,7 @@ public class TeacherConsole {
         System.out.println("1. View assigned courses");
         System.out.println("2. Put mark");
         System.out.println("3. View news");
+        System.out.println("4. View students in course");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -102,6 +107,24 @@ public class TeacherConsole {
         for (String item : news) {
             System.out.println(item);
             System.out.println();
+        }
+    }
+
+    private void viewStudentsInCourse() {
+        try {
+            System.out.print("Course code: ");
+            String courseCode = scanner.nextLine();
+            List<models.users.Student> students = courseService.getStudentsForTeacherCourse(teacher, courseCode);
+            if (students.isEmpty()) {
+                System.out.println("No students enrolled for this course.");
+                return;
+            }
+            System.out.printf("%-20s %-30s%n", "Username", "Full name");
+            for (models.users.Student s : students) {
+                System.out.printf("%-20s %-30s%n", s.getUsername(), s.getFullName());
+            }
+        } catch (Exception e) {
+            System.out.println("Could not retrieve students: " + e.getMessage());
         }
     }
 }

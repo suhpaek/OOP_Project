@@ -1,5 +1,8 @@
 package ui;
 
+import java.util.List;
+import java.util.Scanner;
+
 import data.DataStore;
 import models.academic.Course;
 import models.users.Student;
@@ -9,10 +12,8 @@ import services.NewsService;
 import services.TranscriptService;
 import services.UserService;
 
-import java.util.List;
-import java.util.Scanner;
-
 public class StudentConsole {
+
     private final Scanner scanner;
     private final Student student;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
@@ -59,6 +60,9 @@ public class StudentConsole {
                 case "9":
                     viewNews();
                     break;
+                case "10":
+                    viewSchedule();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -81,6 +85,7 @@ public class StudentConsole {
         System.out.println("7. View teacher info");
         System.out.println("8. Rate teacher");
         System.out.println("9. View news");
+        System.out.println("10. View schedule");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -162,6 +167,29 @@ public class StudentConsole {
             System.out.println(courseService.getTeacherInfo(student, courseCode));
         } catch (Exception e) {
             System.out.println("Could not show teacher info: " + e.getMessage());
+        }
+    }
+
+    private void viewSchedule() {
+        try {
+            List<String> rows = courseService.getSchedule(student);
+            if (rows.isEmpty()) {
+                System.out.println("No scheduled lessons.");
+                return;
+            }
+            System.out.printf("%-10s %-8s %-8s %-12s %-12s %-20s%n", "Day", "Time", "Room", "Course", "Type", "Teacher");
+            for (String r : rows) {
+                String[] parts = r.split(" \\| ");
+                System.out.printf("%-10s %-8s %-8s %-12s %-12s %-20s%n",
+                        parts.length > 0 ? parts[0] : "",
+                        parts.length > 1 ? parts[1] : "",
+                        parts.length > 2 ? parts[2] : "",
+                        parts.length > 3 ? parts[3] : "",
+                        parts.length > 4 ? parts[4] : "",
+                        parts.length > 5 ? parts[5] : "");
+            }
+        } catch (Exception e) {
+            System.out.println("Could not show schedule: " + e.getMessage());
         }
     }
 

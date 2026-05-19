@@ -1,27 +1,36 @@
 package services;
 
-import models.academic.Course;
-import models.academic.Lesson;
-import models.academic.RegistrationRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import data.DataStore;
 import enums.CourseType;
 import enums.LessonType;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
+import models.academic.Course;
+import models.academic.Lesson;
+import models.academic.RegistrationRequest;
 import models.users.Student;
 import models.users.Teacher;
 import models.users.User;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class CourseService {
-    private final DataStore dataStore;
-    public CourseService() { this(DataStore.getInstance()); }
-    public CourseService(DataStore dataStore) { this.dataStore = dataStore; }
 
-    public void createCourse(Course course) { dataStore.addCourse(course); }
+    private final DataStore dataStore;
+
+    public CourseService() {
+        this(DataStore.getInstance());
+    }
+
+    public CourseService(DataStore dataStore) {
+        this.dataStore = dataStore;
+    }
+
+    public void createCourse(Course course) {
+        dataStore.addCourse(course);
+    }
 
     public Course createCourse(String code, String name, int credits, CourseType type, int yearOfStudy)
             throws IOException {
@@ -34,8 +43,11 @@ public class CourseService {
         dataStore.save();
         return course;
     }
+
     public void enrollStudent(Course course, Student student) throws CreditLimitExceededException, TooManyFailedCoursesException {
-        if (course != null && student != null) student.registerForCourse(course);
+        if (course != null && student != null) {
+            student.registerForCourse(course);
+        }
     }
 
     public List<Course> getAvailableCourses(Student student) {
@@ -49,12 +61,16 @@ public class CourseService {
     }
 
     public List<Course> getRegisteredCourses(Student student) {
-        if (student == null) return new ArrayList<>();
+        if (student == null) {
+            return new ArrayList<>();
+        }
         return new ArrayList<>(student.getRegisteredCourses());
     }
 
     public List<Course> getAssignedCourses(Teacher teacher) {
-        if (teacher == null) return new ArrayList<>();
+        if (teacher == null) {
+            return new ArrayList<>();
+        }
         return new ArrayList<>(teacher.getAssignedCourses());
     }
 
@@ -73,16 +89,22 @@ public class CourseService {
     }
 
     public Course findCourseByCode(String code) {
-        if (code == null) return null;
+        if (code == null) {
+            return null;
+        }
         for (Course course : dataStore.getCourses()) {
-            if (course.getCode().equalsIgnoreCase(code.trim())) return course;
+            if (course.getCode().equalsIgnoreCase(code.trim())) {
+                return course;
+            }
         }
         return null;
     }
 
     public String getTeacherInfo(Student student, String courseCode) {
         Course course = findCourseByCode(courseCode);
-        if (course == null) throw new IllegalArgumentException("Course not found.");
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found.");
+        }
         if (student != null && !student.getRegisteredCourses().contains(course)) {
             throw new IllegalArgumentException("Student is not registered for this course.");
         }
@@ -93,15 +115,37 @@ public class CourseService {
     }
 
     private String formatTeacher(Teacher teacher) {
-        if (teacher == null) return "not assigned";
+        if (teacher == null) {
+            return "not assigned";
+        }
         return teacher.getFullName()
                 + " | " + teacher.getEmail()
                 + " | rating " + String.format("%.2f", teacher.getAverageRating());
     }
 
-    public void dropStudent(Course course, Student student) { if (student != null) student.dropCourse(course); }
-    public void setLectureTeacher(Course course, Teacher teacher) { if (course != null) course.setLectureTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
-    public void setPracticeTeacher(Course course, Teacher teacher) { if (course != null) course.setPracticeTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
+    public void dropStudent(Course course, Student student) {
+        if (student != null) {
+            student.dropCourse(course);
+    
+        }}
+
+    public void setLectureTeacher(Course course, Teacher teacher) {
+        if (course != null) {
+            course.setLectureTeacher(teacher);
+        
+        }if (teacher != null) {
+            teacher.assignCourse(course);
+    
+        }}
+
+    public void setPracticeTeacher(Course course, Teacher teacher) {
+        if (course != null) {
+            course.setPracticeTeacher(teacher);
+        
+        }if (teacher != null) {
+            teacher.assignCourse(course);
+    
+        }}
 
     public void assignTeacher(String courseCode, String teacherUsername, boolean lecture) throws Exception {
         Course course = findCourseByCode(courseCode);
@@ -109,15 +153,22 @@ public class CourseService {
         if (course == null || !(user instanceof Teacher)) {
             throw new IllegalArgumentException("Course or teacher not found.");
         }
-        if (lecture) setLectureTeacher(course, (Teacher) user);
-        else setPracticeTeacher(course, (Teacher) user);
+        if (lecture) {
+            setLectureTeacher(course, (Teacher) user); 
+        }else {
+            setPracticeTeacher(course, (Teacher) user);
+        }
         dataStore.save();
     }
 
-    public void addLesson(Course course, Lesson lesson) { if (course != null) course.addLesson(lesson); }
+    public void addLesson(Course course, Lesson lesson) {
+        if (course != null) {
+            course.addLesson(lesson);
+    
+        }}
 
     public Lesson addLesson(String courseCode, LessonType type, String day, String time,
-                            String room, String teacherUsername) throws Exception {
+            String room, String teacherUsername) throws Exception {
         Course course = findCourseByCode(courseCode);
         User user = dataStore.findUserByUsername(teacherUsername);
         if (course == null || !(user instanceof Teacher)) {
@@ -128,5 +179,36 @@ public class CourseService {
         assignTeacher(courseCode, teacherUsername, type == LessonType.LECTURE);
         dataStore.save();
         return lesson;
+    }
+
+    public List<String> getSchedule(Student student) {
+        List<String> rows = new ArrayList<>();
+        if (student == null) {
+            return rows;
+        }
+        List<Course> courses = getRegisteredCourses(student);
+        for (Course course : courses) {
+            for (Lesson lesson : course.getLessons()) {
+                String teacherName = lesson.getInstructor() == null ? "TBA" : lesson.getInstructor().getFullName();
+                rows.add(String.format("%s | %s | %s | %s | %s | %s",
+                        lesson.getDay(), lesson.getTime(), lesson.getRoom(),
+                        course.getCode(), lesson.getType(), teacherName));
+            }
+        }
+        return rows;
+    }
+
+    public List<Student> getStudentsForTeacherCourse(Teacher teacher, String courseCode) {
+        Course course = findCourseByCode(courseCode);
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found.");
+        }
+        if (teacher == null) {
+            return new ArrayList<>();
+        }
+        if (!teacher.getAssignedCourses().contains(course)) {
+            throw new IllegalArgumentException("Teacher is not assigned to this course.");
+        }
+        return new ArrayList<>(course.getEnrolledStudents());
     }
 }
