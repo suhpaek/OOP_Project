@@ -9,6 +9,7 @@ import models.users.Teacher;
 import models.users.TechSupportSpecialist;
 import models.users.User;
 import services.AuthenticationService;
+import services.DemoDataService;
 
 import java.util.Scanner;
 
@@ -44,6 +45,7 @@ public class ConsoleApplication {
         try {
             store.load();
             store.ensureDefaultAdmin();
+            new DemoDataService(store).seedDemoData();
             store.save();
         } catch (Exception e) {
             System.out.println("Could not initialize storage: " + e.getMessage());
@@ -53,6 +55,7 @@ public class ConsoleApplication {
     private void printMainMenu() {
         System.out.println();
         System.out.println("===== " + I18n.t("app.title") + " =====");
+        System.out.println("Demo users: admin/admin, student/student, teacher/teacher, manager/manager, support/support");
         System.out.println("1. " + I18n.t("login.option"));
         System.out.println("0. " + I18n.t("login.exit"));
         System.out.print(I18n.t("menu.choice") + ": ");
