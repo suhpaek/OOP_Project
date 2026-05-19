@@ -1,6 +1,5 @@
 package ui;
 
-import data.DataStore;
 import enums.CourseType;
 import enums.LessonType;
 import enums.NewsType;
@@ -17,9 +16,9 @@ import java.util.Scanner;
 public class ManagerConsole {
     private final Scanner scanner;
     private final Manager manager;
-    private final CourseService courseService = new CourseService(DataStore.getInstance());
-    private final ManagerService managerService = new ManagerService(DataStore.getInstance(), courseService);
-    private final NewsService newsService = new NewsService(DataStore.getInstance());
+    private final CourseService courseService = new CourseService();
+    private final ManagerService managerService = new ManagerService(courseService);
+    private final NewsService newsService = new NewsService();
 
     public ManagerConsole(Scanner scanner, Manager manager) {
         this.scanner = scanner;
@@ -119,7 +118,7 @@ public class ManagerConsole {
     }
 
     private void processRegistrationRequests() {
-        List<RegistrationRequest> requests = DataStore.getInstance().getRegistrationRequests();
+        List<RegistrationRequest> requests = managerService.getRegistrationRequests();
         if (requests.isEmpty()) {
             System.out.println("No registration requests.");
             return;

@@ -25,12 +25,15 @@ public class AdminService {
     public void updateUser(Admin admin, User user) { dataStore.updateUser(user); addLog(user, admin, "Updated user"); }
 
     public User createUser(Admin admin, String role, String username, String password,
-                           String firstName, String lastName, String email) {
+                           String firstName, String lastName, String email) throws IOException {
+        validateRequired(role, username, password, firstName, lastName, email);
+        ensureUsernameIsFree(username);
         User user = new ConcreteUserFactory().createUser(role);
         user.updateProfile(username, firstName, lastName, null, null);
         user.changePassword(password);
         user.updateEmail(email);
         addUser(admin, user);
+        dataStore.save();
         return user;
     }
 
@@ -71,6 +74,19 @@ public class AdminService {
     public void activateUser(Admin admin, User user) { user.setActive(true); dataStore.updateUser(user); addLog(user, admin, "Activated user"); }
     public void deactivateUser(Admin admin, User user) { user.setActive(false); dataStore.updateUser(user); addLog(user, admin, "Deactivated user"); }
     public void deleteUser(Admin admin, User user) { dataStore.removeUser(user.getId()); addLog(user, admin, "Deleted user"); }
+    public void changeUserStatus(Admin admin, String username, boolean active) throws IOException, UserNotFoundException {
+        User user = dataStore.findUserByUsername(username);
+        if (active) activateUser(admin, user);
+        else deactivateUser(admin, user);
+        dataStore.save();
+    }
+
+    public void deleteUserByUsername(Admin admin, String username) throws IOException, UserNotFoundException {
+        User user = dataStore.findUserByUsername(username);
+        deleteUser(admin, user);
+        dataStore.save();
+    }
+
     public List<User> viewAllUsers() { return dataStore.getAllUsers(); }
     public User viewUserInfo(User user) throws UserNotFoundException { return dataStore.findUserById(user.getId()); }
     public void processLogFile(Admin admin, File logFile) { dataStore.addLog(new ActionLog(logFile.getName(), admin.getId(), "Processed log file")); }
@@ -88,5 +104,21 @@ public class AdminService {
 
     private void addLog(User target, Admin admin, String action) {
         if (target != null && admin != null) dataStore.addLog(new ActionLog(target.getId(), admin.getId(), action));
+    }
+
+    private void ensureUsernameIsFree(String username) {
+        try {
+            dataStore.findUserByUsername(username);
+            throw new IllegalArgumentException("Username already exists.");
+        } catch (UserNotFoundException ignored) {
+        }
+    }
+
+    private void validateRequired(String... values) {
+        for (String value : values) {
+            if (value == null || value.isBlank()) {
+                throw new IllegalArgumentException("All fields are required.");
+            }
+        }
     }
 }

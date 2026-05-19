@@ -3,9 +3,9 @@ package ui;
 import java.util.List;
 import java.util.Scanner;
 
-import data.DataStore;
 import models.academic.Course;
 import models.users.Teacher;
+import services.ComplaintService;
 import services.CourseService;
 import services.GradeService;
 import services.MessageService;
@@ -15,10 +15,11 @@ public class TeacherConsole {
 
     private final Scanner scanner;
     private final Teacher teacher;
-    private final CourseService courseService = new CourseService(DataStore.getInstance());
+    private final CourseService courseService = new CourseService();
     private final GradeService gradeService = new GradeService();
-    private final NewsService newsService = new NewsService(DataStore.getInstance());
-    private final MessageService messageService = new MessageService(DataStore.getInstance());
+    private final NewsService newsService = new NewsService();
+    private final MessageService messageService = new MessageService();
+    private final ComplaintService complaintService = new ComplaintService();
 
     public TeacherConsole(Scanner scanner, Teacher teacher) {
         this.scanner = scanner;
@@ -150,7 +151,6 @@ public class TeacherConsole {
             String text = scanner.nextLine();
             System.out.print("Urgency (LOW/MEDIUM/HIGH): ");
             enums.UrgencyLevel urgency = enums.UrgencyLevel.valueOf(scanner.nextLine().trim().toUpperCase());
-            services.ComplaintService complaintService = new services.ComplaintService(data.DataStore.getInstance());
             complaintService.createComplaintByUsername(teacher, studentUsername, text, urgency);
             System.out.println("Complaint sent.");
         } catch (Exception e) {
@@ -173,24 +173,14 @@ public class TeacherConsole {
 
     private void viewInbox() {
         try {
-            List<models.communication.Message> inbox = messageService.getReceivedMessages(teacher);
-            if (inbox.isEmpty()) {
+            List<String[]> inboxRows = messageService.getInboxRows(teacher);
+            if (inboxRows.isEmpty()) {
                 System.out.println("Inbox is empty.");
                 return;
             }
             System.out.printf("%-36s %-20s %-20s %-40s%n", "ID", "From", "To", "Text");
-            for (models.communication.Message m : inbox) {
-                String from = m.getSenderId();
-                try {
-                    from = DataStore.getInstance().findUserById(m.getSenderId()).getUsername();
-                } catch (Exception ignored) {
-                }
-                String to = m.getReceiverId();
-                try {
-                    to = DataStore.getInstance().findUserById(m.getReceiverId()).getUsername();
-                } catch (Exception ignored) {
-                }
-                System.out.printf("%-36s %-20s %-20s %-40s%n", m.getId(), from, to, m.getText());
+            for (String[] row : inboxRows) {
+                System.out.printf("%-36s %-20s %-20s %-40s%n", row[0], row[1], row[2], row[3]);
             }
         } catch (Exception e) {
             System.out.println("Could not load inbox: " + e.getMessage());

@@ -1,6 +1,5 @@
 package ui;
 
-import data.DataStore;
 import models.support.ActionLog;
 import models.users.Admin;
 import models.users.User;
@@ -13,8 +12,7 @@ import java.util.Scanner;
 public class AdminConsole {
     private final Scanner scanner;
     private final Admin admin;
-    private final DataStore store = DataStore.getInstance();
-    private final AdminService adminService = new AdminService(store);
+    private final AdminService adminService = new AdminService();
 
     public AdminConsole(Scanner scanner, Admin admin) {
         this.scanner = scanner;
@@ -103,11 +101,7 @@ public class AdminConsole {
             System.out.print("Email: ");
             String email = scanner.nextLine().trim();
 
-            validateRequired(role, username, password, firstName, lastName, email);
-            ensureUsernameIsFree(username);
-
             User user = adminService.createUser(admin, role, username, password, firstName, lastName, email);
-            store.save();
             System.out.println("Created user: " + user);
         } catch (Exception e) {
             System.out.println("Could not create user: " + e.getMessage());
@@ -118,15 +112,9 @@ public class AdminConsole {
         try {
             System.out.print("Username: ");
             String username = scanner.nextLine().trim();
-            User user = store.findUserByUsername(username);
             System.out.print("Activate user? (yes/no): ");
             boolean active = scanner.nextLine().trim().equalsIgnoreCase("yes");
-            if (active) {
-                adminService.activateUser(admin, user);
-            } else {
-                adminService.deactivateUser(admin, user);
-            }
-            store.save();
+            adminService.changeUserStatus(admin, username, active);
             System.out.println("User status updated.");
         } catch (Exception e) {
             System.out.println("Could not update user status: " + e.getMessage());
@@ -137,9 +125,7 @@ public class AdminConsole {
         try {
             System.out.print("Username: ");
             String username = scanner.nextLine().trim();
-            User user = store.findUserByUsername(username);
-            adminService.deleteUser(admin, user);
-            store.save();
+            adminService.deleteUserByUsername(admin, username);
             System.out.println("User deleted.");
         } catch (Exception e) {
             System.out.println("Could not delete user: " + e.getMessage());
@@ -173,22 +159,6 @@ public class AdminConsole {
                     safe(log.getId()),
                     safe(log.getActorId()),
                     safe(log.getAction()));
-        }
-    }
-
-    private void ensureUsernameIsFree(String username) throws Exception {
-        try {
-            store.findUserByUsername(username);
-            throw new IllegalArgumentException("Username already exists.");
-        } catch (exceptions.UserNotFoundException ignored) {
-        }
-    }
-
-    private void validateRequired(String... values) {
-        for (String value : values) {
-            if (value == null || value.isBlank()) {
-                throw new IllegalArgumentException("All fields are required.");
-            }
         }
     }
 

@@ -58,4 +58,25 @@ public class MessageService {
         }
         return result;
     }
+
+    public List<String[]> getInboxRows(Employee employee) {
+        List<String[]> rows = new ArrayList<>();
+        for (Message message : getReceivedMessages(employee)) {
+            rows.add(new String[] {
+                    message.getId(),
+                    getUsernameOrId(message.getSenderId()),
+                    getUsernameOrId(message.getReceiverId()),
+                    message.getText()
+            });
+        }
+        return rows;
+    }
+
+    private String getUsernameOrId(String userId) {
+        try {
+            return dataStore.findUserById(userId).getUsername();
+        } catch (Exception ignored) {
+            return userId;
+        }
+    }
 }

@@ -52,6 +52,10 @@ public class ManagerService {
         saveData();
     }
 
+    public List<RegistrationRequest> getRegistrationRequests() {
+        return dataStore.getRegistrationRequests();
+    }
+
     public List<Student> viewStudentsByName(Manager manager) {
         List<Student> students = new ArrayList<>(dataStore.getStudents());
         students.sort(new StudentNameComparator());

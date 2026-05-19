@@ -3,7 +3,6 @@ package ui;
 import java.util.List;
 import java.util.Scanner;
 
-import data.DataStore;
 import models.academic.Course;
 import models.users.Student;
 import services.CourseService;
@@ -16,9 +15,9 @@ public class StudentConsole {
 
     private final Scanner scanner;
     private final Student student;
-    private final CourseService courseService = new CourseService(DataStore.getInstance());
+    private final CourseService courseService = new CourseService();
     private final GradeService gradeService = new GradeService();
-    private final NewsService newsService = new NewsService(DataStore.getInstance());
+    private final NewsService newsService = new NewsService();
     private final TranscriptService transcriptService = new TranscriptService();
     private final UserService userService = new UserService();
 
