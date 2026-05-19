@@ -10,7 +10,9 @@ public class ConcreteUserFactory extends UserFactory {
             case "Teacher": return new Teacher();
             case "Manager": return new Manager();
             case "Admin": return new Admin();
-            case "TechSupportSpecialist": return new TechSupportSpecialist();
+            // There is no User subclass for TechSupportSpecialist in models.users
+            // Map TechSupportSpecialist registration to Employee by default
+            case "TechSupportSpecialist": return new Employee();
             default: throw new IllegalArgumentException("Unknown user type: " + userType);
         }
     }
