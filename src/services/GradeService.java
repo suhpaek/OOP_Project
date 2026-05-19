@@ -8,6 +8,8 @@ import models.users.Teacher;
 import models.users.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GradeService {
     private final DataStore dataStore;
@@ -52,6 +54,22 @@ public class GradeService {
 
     private void saveData() throws IOException {
         dataStore.save();
+    }
+
+    public List<String> getStudentMarks(Student student) {
+        List<String> rows = new ArrayList<>();
+        if (student == null) return rows;
+        for (Course course : student.getRegisteredCourses()) {
+            Mark mark = course.getMark(student);
+            if (mark == null) {
+                rows.add(course.getCode() + " - " + course.getName() + ": no mark yet");
+            } else {
+                rows.add(course.getCode() + " - " + course.getName()
+                        + ": " + mark.getTotal()
+                        + " (" + mark.getLetterGrade() + ")");
+            }
+        }
+        return rows;
     }
 
     public double total(Mark mark) { return mark == null ? 0 : mark.getTotal(); }

@@ -4,6 +4,7 @@ import data.DataStore;
 import models.academic.Course;
 import models.users.Student;
 import services.CourseService;
+import services.GradeService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +13,7 @@ public class StudentConsole {
     private final Scanner scanner;
     private final Student student;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
+    private final GradeService gradeService = new GradeService();
 
     public StudentConsole(Scanner scanner, Student student) {
         this.scanner = scanner;
@@ -33,6 +35,9 @@ public class StudentConsole {
                 case "3":
                     viewMyCourses();
                     break;
+                case "4":
+                    viewMarks();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -49,6 +54,7 @@ public class StudentConsole {
         System.out.println("1. View available courses");
         System.out.println("2. Create course registration request");
         System.out.println("3. View my courses");
+        System.out.println("4. View marks");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -96,6 +102,17 @@ public class StudentConsole {
             System.out.println("Registration request created. Wait for manager approval.");
         } catch (Exception e) {
             System.out.println("Could not create request: " + e.getMessage());
+        }
+    }
+
+    private void viewMarks() {
+        List<String> marks = gradeService.getStudentMarks(student);
+        if (marks.isEmpty()) {
+            System.out.println("No marks found.");
+            return;
+        }
+        for (String mark : marks) {
+            System.out.println(mark);
         }
     }
 }
