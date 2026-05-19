@@ -5,6 +5,7 @@ import models.users.Admin;
 import models.users.Manager;
 import models.users.Student;
 import models.users.Teacher;
+import models.users.TechSupportSpecialist;
 import models.users.User;
 import services.AuthenticationService;
 
@@ -69,6 +70,8 @@ public class ConsoleApplication {
             new TeacherConsole(scanner, (Teacher) user).start();
         } else if (user instanceof Student) {
             new StudentConsole(scanner, (Student) user).start();
+        } else if (user instanceof TechSupportSpecialist) {
+            new TechSupportConsole(scanner, (TechSupportSpecialist) user).start();
         } else {
             System.out.println("Console menu for " + user.getClass().getSimpleName() + " is not implemented yet.");
         }

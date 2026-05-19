@@ -87,7 +87,7 @@ public class AdminConsole {
     private void createUser() {
         try {
             System.out.println();
-            System.out.println("Roles: Student, Teacher, Manager, Admin");
+            System.out.println("Roles: Student, Teacher, Manager, Admin, TechSupportSpecialist");
             System.out.print("Role: ");
             String role = scanner.nextLine().trim();
             System.out.print("Username: ");

@@ -9,6 +9,7 @@ import enums.NewsType;
 import models.research.ResearchPaper;
 import models.research.Researcher;
 import models.support.ActionLog;
+import models.support.TechSupportRequest;
 import models.users.Admin;
 import models.users.Student;
 import models.users.User;
@@ -28,6 +29,7 @@ public class DataStore {
     private final List<News> news = new ArrayList<>();
     private final List<Message> messages = new ArrayList<>();
     private final List<Complaint> complaints = new ArrayList<>();
+    private final List<TechSupportRequest> supportRequests = new ArrayList<>();
     private final List<Course> courses = new ArrayList<>();
     private final List<RegistrationRequest> registrationRequests = new ArrayList<>();
     private boolean courseRegistrationOpen;
@@ -125,6 +127,14 @@ public class DataStore {
         return new ArrayList<>(complaints);
     }
 
+    public void addSupportRequest(TechSupportRequest request) {
+        if (request != null) supportRequests.add(request);
+    }
+
+    public List<TechSupportRequest> getSupportRequests() {
+        return new ArrayList<>(supportRequests);
+    }
+
     public void addCourse(Course course) {
         if (course != null && !courses.contains(course)) courses.add(course);
     }
@@ -192,6 +202,7 @@ public class DataStore {
             outputStream.writeObject(courses);
             outputStream.writeObject(registrationRequests);
             outputStream.writeBoolean(courseRegistrationOpen);
+            outputStream.writeObject(supportRequests);
         }
     }
 
@@ -213,8 +224,8 @@ public class DataStore {
             try {
                 registrationRequests.addAll((List<RegistrationRequest>) inputStream.readObject());
                 courseRegistrationOpen = inputStream.readBoolean();
+                supportRequests.addAll((List<TechSupportRequest>) inputStream.readObject());
             } catch (EOFException ignored) {
-                courseRegistrationOpen = false;
             }
         } catch (InvalidClassException e) {
             clearAll();
@@ -227,8 +238,10 @@ public class DataStore {
         news.clear();
         messages.clear();
         complaints.clear();
+        supportRequests.clear();
         courses.clear();
         registrationRequests.clear();
         courseRegistrationOpen = false;
     }
+
 }
