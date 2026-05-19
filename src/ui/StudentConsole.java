@@ -43,6 +43,9 @@ public class StudentConsole {
                 case "5":
                     viewTranscript();
                     break;
+                case "6":
+                    getTranscript();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -61,6 +64,7 @@ public class StudentConsole {
         System.out.println("3. View my courses");
         System.out.println("4. View marks");
         System.out.println("5. View transcript");
+        System.out.println("6. Get transcript");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -124,5 +128,14 @@ public class StudentConsole {
 
     private void viewTranscript() {
         System.out.println(transcriptService.buildStudentTranscript(student));
+    }
+
+    private void getTranscript() {
+        try {
+            String fileName = transcriptService.generateTranscriptFile(student);
+            System.out.println("Transcript generated: " + fileName);
+        } catch (Exception e) {
+            System.out.println("Could not generate transcript: " + e.getMessage());
+        }
     }
 }

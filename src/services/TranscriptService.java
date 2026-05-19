@@ -5,6 +5,8 @@ import models.academic.Mark;
 import models.academic.Transcript;
 import models.users.Student;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,15 @@ public class TranscriptService {
         }
         builder.append(String.format("GPA: %.2f", student.getTranscript().calculateGpa()));
         return builder.toString();
+    }
+
+    public String generateTranscriptFile(Student student) throws IOException {
+        if (student == null) throw new IllegalArgumentException("No student selected.");
+        String fileName = "transcript_" + student.getUsername() + ".txt";
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write(buildStudentTranscript(student));
+        }
+        return fileName;
     }
 
     public void addRecord(Transcript transcript, Course course, Mark mark) {
