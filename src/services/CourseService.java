@@ -46,6 +46,11 @@ public class CourseService {
         return result;
     }
 
+    public List<Course> getRegisteredCourses(Student student) {
+        if (student == null) return new ArrayList<>();
+        return new ArrayList<>(student.getRegisteredCourses());
+    }
+
     public RegistrationRequest createRegistrationRequest(Student student, String courseCode) throws IOException {
         if (!dataStore.isCourseRegistrationOpen()) {
             throw new IllegalStateException("Course registration is closed.");

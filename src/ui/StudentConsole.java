@@ -30,6 +30,9 @@ public class StudentConsole {
                 case "2":
                     createRegistrationRequest();
                     break;
+                case "3":
+                    viewMyCourses();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -45,6 +48,7 @@ public class StudentConsole {
         System.out.println("Welcome, " + student.getFullName());
         System.out.println("1. View available courses");
         System.out.println("2. Create course registration request");
+        System.out.println("3. View my courses");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -64,6 +68,23 @@ public class StudentConsole {
                     course.getCredits(),
                     course.getCourseType(),
                     course.getIntendedYearOfStudy());
+        }
+    }
+
+    private void viewMyCourses() {
+        List<Course> courses = courseService.getRegisteredCourses(student);
+        if (courses.isEmpty()) {
+            System.out.println("You are not registered for any courses.");
+            return;
+        }
+
+        System.out.printf("%-12s %-35s %-8s %-16s%n", "Code", "Name", "Credits", "Type");
+        for (Course course : courses) {
+            System.out.printf("%-12s %-35s %-8d %-16s%n",
+                    course.getCode(),
+                    course.getName(),
+                    course.getCredits(),
+                    course.getCourseType());
         }
     }
 
