@@ -1,6 +1,7 @@
 package ui;
 
 import enums.CitationFormat;
+import i18n.I18n;
 import models.research.ResearchPaper;
 import models.research.Researcher;
 import models.users.User;
@@ -52,22 +53,22 @@ public class ResearchConsole {
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
 
     private void printMenu() {
         System.out.println();
-        System.out.println("===== RESEARCH MENU =====");
-        System.out.println("1. View my papers");
-        System.out.println("2. Publish paper");
-        System.out.println("3. View my h-index");
-        System.out.println("4. Get citation");
-        System.out.println("5. View top cited researcher");
-        System.out.println("6. View all researchers");
-        System.out.println("0. Back");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("research.title") + " =====");
+        System.out.println("1. " + I18n.t("research.view_papers"));
+        System.out.println("2. " + I18n.t("research.publish_paper"));
+        System.out.println("3. " + I18n.t("research.hindex"));
+        System.out.println("4. " + I18n.t("research.citation"));
+        System.out.println("5. " + I18n.t("research.top_cited"));
+        System.out.println("6. " + I18n.t("research.all_researchers"));
+        System.out.println("0. " + I18n.t("menu.back"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void viewMyPapers() {

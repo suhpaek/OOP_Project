@@ -3,6 +3,7 @@ package ui;
 import java.util.List;
 import java.util.Scanner;
 
+import i18n.I18n;
 import models.academic.Course;
 import models.organization.StudentOrganization;
 import models.users.Student;
@@ -71,46 +72,50 @@ public class StudentConsole {
                 case "12":
                     organizationMenu();
                     break;
+                case "13":
+                    ConsoleLanguage.changeLanguage(scanner, student);
+                    break;
                 case "0":
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
 
     private void printMenu() {
         System.out.println();
-        System.out.println("===== STUDENT MENU =====");
-        System.out.println("Welcome, " + student.getFullName());
-        System.out.println("1. View available courses");
-        System.out.println("2. Create course registration request");
-        System.out.println("3. View my courses");
-        System.out.println("4. View marks");
-        System.out.println("5. View transcript");
-        System.out.println("6. Get transcript");
-        System.out.println("7. View teacher info");
-        System.out.println("8. Rate teacher");
-        System.out.println("9. View news");
-        System.out.println("10. View schedule");
-        System.out.println("11. Research menu");
-        System.out.println("12. Student organizations");
-        System.out.println("0. Logout");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("student.title") + " =====");
+        System.out.println(I18n.t("student.welcome", student.getFullName()));
+        System.out.println("1. " + I18n.t("student.courses_available"));
+        System.out.println("2. " + I18n.t("student.courses_register"));
+        System.out.println("3. " + I18n.t("student.courses_registered"));
+        System.out.println("4. " + I18n.t("student.marks"));
+        System.out.println("5. " + I18n.t("student.transcript"));
+        System.out.println("6. " + I18n.t("student.get_transcript"));
+        System.out.println("7. " + I18n.t("student.teacher_info"));
+        System.out.println("8. " + I18n.t("student.rate_teacher"));
+        System.out.println("9. " + I18n.t("menu.news"));
+        System.out.println("10. " + I18n.t("menu.schedule"));
+        System.out.println("11. " + I18n.t("research.title"));
+        System.out.println("12. " + I18n.t("student.organizations"));
+        System.out.println("13. " + I18n.t("menu.change_language"));
+        System.out.println("0. " + I18n.t("menu.logout"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void organizationMenu() {
         boolean running = true;
         while (running) {
             System.out.println();
-            System.out.println("===== STUDENT ORGANIZATIONS =====");
-            System.out.println("1. View all organizations");
-            System.out.println("2. View my organizations");
-            System.out.println("3. Join organization");
-            System.out.println("4. Leave organization");
-            System.out.println("0. Back");
-            System.out.print("Choose: ");
+            System.out.println("===== " + I18n.t("org.title") + " =====");
+            System.out.println("1. " + I18n.t("org.view_all"));
+            System.out.println("2. " + I18n.t("org.view_mine"));
+            System.out.println("3. " + I18n.t("org.join"));
+            System.out.println("4. " + I18n.t("org.leave"));
+            System.out.println("0. " + I18n.t("menu.back"));
+            System.out.print(I18n.t("menu.choice") + ": ");
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
@@ -129,7 +134,7 @@ public class StudentConsole {
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }

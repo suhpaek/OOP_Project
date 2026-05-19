@@ -1,5 +1,6 @@
 package ui;
 
+import i18n.I18n;
 import models.support.ActionLog;
 import models.users.Admin;
 import models.users.User;
@@ -44,26 +45,31 @@ public class AdminConsole {
                 case "6":
                     exportLogs();
                     break;
+                case "7":
+                    ConsoleLanguage.changeLanguage(scanner, admin);
+                    break;
                 case "0":
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
 
     private void printMenu() {
         System.out.println();
-        System.out.println("===== ADMIN MENU =====");
-        System.out.println("1. View all users");
-        System.out.println("2. Create user");
-        System.out.println("3. View logs");
-        System.out.println("4. Activate/deactivate user");
-        System.out.println("5. Delete user");
-        System.out.println("6. Export logs");
-        System.out.println("0. Logout");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("admin.title") + " =====");
+        System.out.println(I18n.t("admin.welcome", admin.getFullName()));
+        System.out.println("1. " + I18n.t("admin.view_users"));
+        System.out.println("2. " + I18n.t("admin.add_user"));
+        System.out.println("3. " + I18n.t("admin.view_logs"));
+        System.out.println("4. " + I18n.t("admin.change_user_status"));
+        System.out.println("5. " + I18n.t("admin.remove_user"));
+        System.out.println("6. " + I18n.t("admin.export_logs"));
+        System.out.println("7. " + I18n.t("menu.change_language"));
+        System.out.println("0. " + I18n.t("menu.logout"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void viewAllUsers() {

@@ -1,6 +1,7 @@
 package ui;
 
 import data.DataStore;
+import i18n.I18n;
 import models.users.Admin;
 import models.users.Manager;
 import models.users.Student;
@@ -31,10 +32,10 @@ public class ConsoleApplication {
                 case "0":
                     running = false;
                     saveData();
-                    System.out.println("Goodbye!");
+                    System.out.println(I18n.t("app.exit"));
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
@@ -51,10 +52,10 @@ public class ConsoleApplication {
 
     private void printMainMenu() {
         System.out.println();
-        System.out.println("===== UNIVERSITY SYSTEM =====");
-        System.out.println("1. Login");
-        System.out.println("0. Exit");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("app.title") + " =====");
+        System.out.println("1. " + I18n.t("login.option"));
+        System.out.println("0. " + I18n.t("login.exit"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void login() {

@@ -3,6 +3,7 @@ package ui;
 import enums.CourseType;
 import enums.LessonType;
 import enums.NewsType;
+import i18n.I18n;
 import models.academic.RegistrationRequest;
 import models.organization.StudentOrganization;
 import models.users.Manager;
@@ -64,43 +65,48 @@ public class ManagerConsole {
                 case "10":
                     organizationMenu();
                     break;
+                case "11":
+                    ConsoleLanguage.changeLanguage(scanner, manager);
+                    break;
                 case "0":
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
 
     private void printMenu() {
         System.out.println();
-        System.out.println("===== MANAGER MENU =====");
-        System.out.println("Welcome, " + manager.getFullName());
-        System.out.println("Course registration: " + (managerService.isCourseRegistrationOpen() ? "OPEN" : "CLOSED"));
-        System.out.println("1. Add course");
-        System.out.println("2. Open/close course registration");
-        System.out.println("3. View/approve registration requests");
-        System.out.println("4. Assign course to teacher");
-        System.out.println("5. View news");
-        System.out.println("6. Publish news");
-        System.out.println("7. Add lesson to course");
-        System.out.println("8. View students");
-        System.out.println("9. Create academic report");
-        System.out.println("10. Student organizations");
-        System.out.println("0. Logout");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("manager.title") + " =====");
+        System.out.println(I18n.t("manager.welcome", manager.getFullName()));
+        System.out.println(I18n.t("manager.registration_status") + ": "
+                + (managerService.isCourseRegistrationOpen() ? I18n.t("status.open") : I18n.t("status.closed")));
+        System.out.println("1. " + I18n.t("manager.add_course"));
+        System.out.println("2. " + I18n.t("manager.registration_toggle"));
+        System.out.println("3. " + I18n.t("manager.approve_reg"));
+        System.out.println("4. " + I18n.t("manager.assign_course"));
+        System.out.println("5. " + I18n.t("menu.news"));
+        System.out.println("6. " + I18n.t("manager.publish_news"));
+        System.out.println("7. " + I18n.t("manager.add_lesson"));
+        System.out.println("8. " + I18n.t("manager.view_students"));
+        System.out.println("9. " + I18n.t("manager.reports"));
+        System.out.println("10. " + I18n.t("student.organizations"));
+        System.out.println("11. " + I18n.t("menu.change_language"));
+        System.out.println("0. " + I18n.t("menu.logout"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void organizationMenu() {
         boolean running = true;
         while (running) {
             System.out.println();
-            System.out.println("===== STUDENT ORGANIZATIONS =====");
-            System.out.println("1. View organizations");
-            System.out.println("2. Create organization");
-            System.out.println("0. Back");
-            System.out.print("Choose: ");
+            System.out.println("===== " + I18n.t("org.title") + " =====");
+            System.out.println("1. " + I18n.t("org.view_all"));
+            System.out.println("2. " + I18n.t("org.create"));
+            System.out.println("0. " + I18n.t("menu.back"));
+            System.out.print(I18n.t("menu.choice") + ": ");
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1":
@@ -113,7 +119,7 @@ public class ManagerConsole {
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }

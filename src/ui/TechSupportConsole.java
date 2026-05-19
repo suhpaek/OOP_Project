@@ -1,6 +1,7 @@
 package ui;
 
 import enums.RequestStatus;
+import i18n.I18n;
 import models.communication.Complaint;
 import models.support.TechSupportRequest;
 import models.users.TechSupportSpecialist;
@@ -40,25 +41,29 @@ public class TechSupportConsole {
                 case "4":
                     updateSupportRequestStatus();
                     break;
+                case "5":
+                    ConsoleLanguage.changeLanguage(scanner, specialist);
+                    break;
                 case "0":
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
 
     private void printMenu() {
         System.out.println();
-        System.out.println("===== TECH SUPPORT MENU =====");
-        System.out.println("Welcome, " + specialist.getFullName());
-        System.out.println("1. View complaints");
-        System.out.println("2. View support requests");
-        System.out.println("3. Create support request");
-        System.out.println("4. Update support request status");
-        System.out.println("0. Logout");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("support.title") + " =====");
+        System.out.println(I18n.t("support.welcome", specialist.getFullName()));
+        System.out.println("1. " + I18n.t("support.view_complaints"));
+        System.out.println("2. " + I18n.t("support.view_requests"));
+        System.out.println("3. " + I18n.t("support.create_request"));
+        System.out.println("4. " + I18n.t("support.update_request"));
+        System.out.println("5. " + I18n.t("menu.change_language"));
+        System.out.println("0. " + I18n.t("menu.logout"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void viewComplaints() {

@@ -1,6 +1,7 @@
 package ui;
 
 import enums.Language;
+import i18n.I18n;
 import models.users.User;
 import services.AuthenticationService;
 
@@ -18,15 +19,15 @@ public class AuthConsole {
     public User login() {
         try {
             System.out.println();
-            System.out.println("===== LOGIN =====");
-            System.out.print("Username: ");
+            System.out.println("===== " + I18n.t("auth.login.prompt") + " =====");
+            System.out.print(I18n.t("auth.username") + ": ");
             String username = scanner.nextLine().trim();
-            System.out.print("Password: ");
+            System.out.print(I18n.t("auth.password") + ": ");
             String password = scanner.nextLine();
             Language language = chooseLanguage();
             return authenticationService.login(username, password, language);
         } catch (Exception e) {
-            System.out.println("Login failed: " + e.getMessage());
+            System.out.println(I18n.t("auth.login.fail") + ": " + e.getMessage());
             return null;
         }
     }

@@ -3,6 +3,7 @@ package ui;
 import java.util.List;
 import java.util.Scanner;
 
+import i18n.I18n;
 import models.academic.Course;
 import models.users.Teacher;
 import services.ComplaintService;
@@ -56,29 +57,33 @@ public class TeacherConsole {
                 case "8":
                     new ResearchConsole(scanner, teacher).start();
                     break;
+                case "9":
+                    ConsoleLanguage.changeLanguage(scanner, teacher);
+                    break;
                 case "0":
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println(I18n.t("app.invalid"));
             }
         }
     }
 
     private void printMenu() {
         System.out.println();
-        System.out.println("===== TEACHER MENU =====");
-        System.out.println("Welcome, " + teacher.getFullName());
-        System.out.println("1. View assigned courses");
-        System.out.println("2. Put mark");
-        System.out.println("3. View news");
-        System.out.println("4. View students in course");
-        System.out.println("5. Send complaint");
-        System.out.println("6. Send message");
-        System.out.println("7. View inbox");
-        System.out.println("8. Research menu");
-        System.out.println("0. Logout");
-        System.out.print("Choose: ");
+        System.out.println("===== " + I18n.t("teacher.title") + " =====");
+        System.out.println(I18n.t("teacher.welcome", teacher.getFullName()));
+        System.out.println("1. " + I18n.t("teacher.courses"));
+        System.out.println("2. " + I18n.t("teacher.put_marks"));
+        System.out.println("3. " + I18n.t("menu.news"));
+        System.out.println("4. " + I18n.t("teacher.students"));
+        System.out.println("5. " + I18n.t("teacher.complaint"));
+        System.out.println("6. " + I18n.t("teacher.messages"));
+        System.out.println("7. " + I18n.t("menu.inbox"));
+        System.out.println("8. " + I18n.t("research.title"));
+        System.out.println("9. " + I18n.t("menu.change_language"));
+        System.out.println("0. " + I18n.t("menu.logout"));
+        System.out.print(I18n.t("menu.choice") + ": ");
     }
 
     private void viewAssignedCourses() {
