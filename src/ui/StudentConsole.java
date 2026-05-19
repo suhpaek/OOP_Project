@@ -5,6 +5,7 @@ import models.academic.Course;
 import models.users.Student;
 import services.CourseService;
 import services.GradeService;
+import services.TranscriptService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ public class StudentConsole {
     private final Student student;
     private final CourseService courseService = new CourseService(DataStore.getInstance());
     private final GradeService gradeService = new GradeService();
+    private final TranscriptService transcriptService = new TranscriptService();
 
     public StudentConsole(Scanner scanner, Student student) {
         this.scanner = scanner;
@@ -38,6 +40,9 @@ public class StudentConsole {
                 case "4":
                     viewMarks();
                     break;
+                case "5":
+                    viewTranscript();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -55,6 +60,7 @@ public class StudentConsole {
         System.out.println("2. Create course registration request");
         System.out.println("3. View my courses");
         System.out.println("4. View marks");
+        System.out.println("5. View transcript");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -114,5 +120,9 @@ public class StudentConsole {
         for (String mark : marks) {
             System.out.println(mark);
         }
+    }
+
+    private void viewTranscript() {
+        System.out.println(transcriptService.buildStudentTranscript(student));
     }
 }
