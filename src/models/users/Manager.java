@@ -6,9 +6,10 @@ import data.DataStore;
 import enums.ManagerType;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
+import comparators.StudentGpaComparator;
+import comparators.StudentNameComparator;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Manager extends Employee {
@@ -66,13 +67,13 @@ public class Manager extends Employee {
 
     public List<Student> viewStudentsByName() {
         List<Student> students = DataStore.getInstance().getStudents();
-        students.sort(Comparator.comparing(Student::getFullName));
+        students.sort(new StudentNameComparator());
         return students;
     }
 
     public List<Student> viewStudentsByGpa() {
         List<Student> students = DataStore.getInstance().getStudents();
-        students.sort(Comparator.comparingDouble((Student student) -> student.getTranscript().calculateGpa()).reversed());
+        students.sort(new StudentGpaComparator());
         return students;
     }
 

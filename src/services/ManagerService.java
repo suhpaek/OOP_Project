@@ -5,8 +5,10 @@ import models.academic.RegistrationRequest;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
 import models.users.Manager;
+import models.users.Student;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ManagerService {
     private final DataStore dataStore;
@@ -45,6 +47,14 @@ public class ManagerService {
         if (manager == null || request == null || request.isProcessed()) return;
         request.markRejected(manager);
         saveData();
+    }
+
+    public List<Student> viewStudentsByName(Manager manager) {
+        return manager.viewStudentsByName();
+    }
+
+    public List<Student> viewStudentsByGpa(Manager manager) {
+        return manager.viewStudentsByGpa();
     }
 
     private void saveData() {

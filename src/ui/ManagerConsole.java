@@ -6,6 +6,7 @@ import enums.LessonType;
 import enums.NewsType;
 import models.academic.RegistrationRequest;
 import models.users.Manager;
+import models.users.Student;
 import services.CourseService;
 import services.ManagerService;
 import services.NewsService;
@@ -52,6 +53,9 @@ public class ManagerConsole {
                 case "7":
                     addLesson();
                     break;
+                case "8":
+                    viewStudents();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -73,6 +77,7 @@ public class ManagerConsole {
         System.out.println("5. View news");
         System.out.println("6. Publish news");
         System.out.println("7. Add lesson to course");
+        System.out.println("8. View students");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -200,6 +205,25 @@ public class ManagerConsole {
             System.out.println("Lesson added.");
         } catch (Exception e) {
             System.out.println("Could not add lesson: " + e.getMessage());
+        }
+    }
+
+    private void viewStudents() {
+        System.out.print("Sort by GPA? (yes/no): ");
+        boolean byGpa = scanner.nextLine().trim().equalsIgnoreCase("yes");
+        List<Student> students = byGpa
+                ? managerService.viewStudentsByGpa(manager)
+                : managerService.viewStudentsByName(manager);
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+            return;
+        }
+        System.out.printf("%-16s %-28s %-8s%n", "Username", "Full name", "GPA");
+        for (Student student : students) {
+            System.out.printf("%-16s %-28s %-8.2f%n",
+                    student.getUsername(),
+                    student.getFullName(),
+                    student.getTranscript().calculateGpa());
         }
     }
 }
