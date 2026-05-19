@@ -46,6 +46,9 @@ public class StudentConsole {
                 case "6":
                     getTranscript();
                     break;
+                case "7":
+                    viewTeacherInfo();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -65,6 +68,7 @@ public class StudentConsole {
         System.out.println("4. View marks");
         System.out.println("5. View transcript");
         System.out.println("6. Get transcript");
+        System.out.println("7. View teacher info");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -136,6 +140,16 @@ public class StudentConsole {
             System.out.println("Transcript generated: " + fileName);
         } catch (Exception e) {
             System.out.println("Could not generate transcript: " + e.getMessage());
+        }
+    }
+
+    private void viewTeacherInfo() {
+        try {
+            System.out.print("Course code: ");
+            String courseCode = scanner.nextLine();
+            System.out.println(courseService.getTeacherInfo(student, courseCode));
+        } catch (Exception e) {
+            System.out.println("Could not show teacher info: " + e.getMessage());
         }
     }
 }

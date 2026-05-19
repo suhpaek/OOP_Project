@@ -79,6 +79,25 @@ public class CourseService {
         return null;
     }
 
+    public String getTeacherInfo(Student student, String courseCode) {
+        Course course = findCourseByCode(courseCode);
+        if (course == null) throw new IllegalArgumentException("Course not found.");
+        if (student != null && !student.getRegisteredCourses().contains(course)) {
+            throw new IllegalArgumentException("Student is not registered for this course.");
+        }
+
+        return "Course: " + course + "\n"
+                + "Lecture teacher: " + formatTeacher(course.getLectureTeacher()) + "\n"
+                + "Practice teacher: " + formatTeacher(course.getPracticeTeacher());
+    }
+
+    private String formatTeacher(Teacher teacher) {
+        if (teacher == null) return "not assigned";
+        return teacher.getFullName()
+                + " | " + teacher.getEmail()
+                + " | rating " + String.format("%.2f", teacher.getAverageRating());
+    }
+
     public void dropStudent(Course course, Student student) { if (student != null) student.dropCourse(course); }
     public void setLectureTeacher(Course course, Teacher teacher) { if (course != null) course.setLectureTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
     public void setPracticeTeacher(Course course, Teacher teacher) { if (course != null) course.setPracticeTeacher(teacher); if (teacher != null) teacher.assignCourse(course); }
