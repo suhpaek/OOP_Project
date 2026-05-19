@@ -2,6 +2,7 @@ package ui;
 
 import data.DataStore;
 import enums.CourseType;
+import enums.LessonType;
 import enums.NewsType;
 import models.academic.RegistrationRequest;
 import models.users.Manager;
@@ -48,6 +49,9 @@ public class ManagerConsole {
                 case "6":
                     publishNews();
                     break;
+                case "7":
+                    addLesson();
+                    break;
                 case "0":
                     running = false;
                     break;
@@ -68,6 +72,7 @@ public class ManagerConsole {
         System.out.println("4. Assign course to teacher");
         System.out.println("5. View news");
         System.out.println("6. Publish news");
+        System.out.println("7. Add lesson to course");
         System.out.println("0. Logout");
         System.out.print("Choose: ");
     }
@@ -174,6 +179,27 @@ public class ManagerConsole {
             System.out.println("News published.");
         } catch (Exception e) {
             System.out.println("Could not publish news: " + e.getMessage());
+        }
+    }
+
+    private void addLesson() {
+        try {
+            System.out.print("Course code: ");
+            String courseCode = scanner.nextLine();
+            System.out.print("Type (LECTURE/PRACTICE/LAB): ");
+            LessonType type = LessonType.valueOf(scanner.nextLine().trim().toUpperCase());
+            System.out.print("Day: ");
+            String day = scanner.nextLine();
+            System.out.print("Time: ");
+            String time = scanner.nextLine();
+            System.out.print("Room: ");
+            String room = scanner.nextLine();
+            System.out.print("Teacher username: ");
+            String teacherUsername = scanner.nextLine();
+            courseService.addLesson(courseCode, type, day, time, room, teacherUsername);
+            System.out.println("Lesson added.");
+        } catch (Exception e) {
+            System.out.println("Could not add lesson: " + e.getMessage());
         }
     }
 }

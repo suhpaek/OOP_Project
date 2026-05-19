@@ -5,6 +5,7 @@ import models.academic.Lesson;
 import models.academic.RegistrationRequest;
 import data.DataStore;
 import enums.CourseType;
+import enums.LessonType;
 import exceptions.CreditLimitExceededException;
 import exceptions.TooManyFailedCoursesException;
 import models.users.Student;
@@ -114,4 +115,18 @@ public class CourseService {
     }
 
     public void addLesson(Course course, Lesson lesson) { if (course != null) course.addLesson(lesson); }
+
+    public Lesson addLesson(String courseCode, LessonType type, String day, String time,
+                            String room, String teacherUsername) throws Exception {
+        Course course = findCourseByCode(courseCode);
+        User user = dataStore.findUserByUsername(teacherUsername);
+        if (course == null || !(user instanceof Teacher)) {
+            throw new IllegalArgumentException("Course or teacher not found.");
+        }
+        Lesson lesson = new Lesson(type, day, time, room, (Teacher) user);
+        addLesson(course, lesson);
+        assignTeacher(courseCode, teacherUsername, type == LessonType.LECTURE);
+        dataStore.save();
+        return lesson;
+    }
 }
