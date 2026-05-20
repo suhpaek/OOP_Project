@@ -1,8 +1,5 @@
 package models.research;
 
-import exceptions.NonResearcherJoinProjectException;
-import models.users.User;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,33 +7,45 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import exceptions.NonResearcherJoinProjectException;
+import models.users.User;
+
 public class Researcher implements Serializable {
-    public static final Comparator<ResearchPaper> BY_CITATIONS =
-            Comparator.comparingInt(ResearchPaper::getCitations).reversed();
-    public static final Comparator<ResearchPaper> BY_DATE =
-            Comparator.comparing(ResearchPaper::getPublishDate, Comparator.nullsLast(Comparator.reverseOrder()));
-    public static final Comparator<ResearchPaper> BY_LENGTH =
-            Comparator.comparingInt(ResearchPaper::getPages).reversed();
+
+    public static final Comparator<ResearchPaper> BY_CITATIONS
+            = Comparator.comparingInt(ResearchPaper::getCitations).reversed();
+    public static final Comparator<ResearchPaper> BY_DATE
+            = Comparator.comparing(ResearchPaper::getPublishDate, Comparator.nullsLast(Comparator.reverseOrder()));
+    public static final Comparator<ResearchPaper> BY_LENGTH
+            = Comparator.comparingInt(ResearchPaper::getPages).reversed();
 
     private User user;
     private List<ResearchPaper> papers;
     private List<ResearchProject> projects;
 
     public Researcher(User user) {
-        if (user == null) throw new IllegalArgumentException("User must not be null");
+        if (user == null) {
+            throw new IllegalArgumentException("User must not be null");
+        }
         this.user = user;
         this.papers = new ArrayList<>();
         this.projects = new ArrayList<>();
     }
 
     public void addPaper(ResearchPaper paper) {
-        if (paper == null) return;
-        if (!papers.contains(paper)) papers.add(paper);
+        if (paper == null) {
+            return;
+        }
+        if (!papers.contains(paper)) {
+            papers.add(paper);
+        }
         paper.addAuthor(this);
     }
 
     public void joinProject(ResearchProject project) throws NonResearcherJoinProjectException {
-        if (project == null) return;
+        if (project == null) {
+            return;
+        }
         project.addParticipant(this);
         if (!projects.contains(project)) {
             projects.add(project);
@@ -106,14 +115,20 @@ public class Researcher implements Serializable {
     }
 
     public static Researcher getTopCitedResearcher(List<Researcher> researchers) {
-        if (researchers == null || researchers.isEmpty()) return null;
+        if (researchers == null || researchers.isEmpty()) {
+            return null;
+        }
         return Collections.max(researchers, Comparator.comparingInt(Researcher::getTotalCitations));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Researcher)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Researcher)) {
+            return false;
+        }
         Researcher that = (Researcher) o;
         return Objects.equals(user, that.user);
     }
@@ -125,10 +140,10 @@ public class Researcher implements Serializable {
 
     @Override
     public String toString() {
-        return "Researcher{" +
-                "name='" + getName() + '\'' +
-                ", hIndex=" + calculateHIndex() +
-                ", totalCitations=" + getTotalCitations() +
-                '}';
+        return "Researcher{"
+                + "name='" + getName() + '\''
+                + ", hIndex=" + calculateHIndex()
+                + ", totalCitations=" + getTotalCitations()
+                + '}';
     }
 }

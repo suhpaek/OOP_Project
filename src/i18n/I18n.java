@@ -3,6 +3,7 @@ package i18n;
 import enums.Language;
 
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +40,9 @@ public final class I18n {
 
         try {
             InputStream is = I18n.class.getClassLoader().getResourceAsStream(resourcePath);
+            if (is == null) {
+                is = openFromSourceTree(resourcePath);
+            }
             if (is != null) {
                 bundle = new PropertyResourceBundle(new InputStreamReader(is, StandardCharsets.UTF_8));
             } else {
@@ -87,10 +91,21 @@ public final class I18n {
     private static void loadDefaultBundle() {
         try {
             InputStream is = I18n.class.getClassLoader().getResourceAsStream("i18n/properties/en.properties");
+            if (is == null) {
+                is = openFromSourceTree("i18n/properties/en.properties");
+            }
             if (is != null) {
                 bundle = new PropertyResourceBundle(new InputStreamReader(is, StandardCharsets.UTF_8));
             }
         } catch (IOException ignored) {
+        }
+    }
+
+    private static InputStream openFromSourceTree(String resourcePath) {
+        try {
+            return new FileInputStream("src/" + resourcePath);
+        } catch (IOException ignored) {
+            return null;
         }
     }
 }

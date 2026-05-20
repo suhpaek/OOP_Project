@@ -2,13 +2,14 @@ package models.users;
 
 import enums.Degree;
 import exceptions.InvalidSupervisorException;
+import models.research.DiplomaProjectOwner;
 import models.research.ResearchPaper;
 import models.research.Researcher;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraduateStudent extends Student {
+public class GraduateStudent extends Student implements DiplomaProjectOwner {
     private Degree graduateDegree;
     private Researcher researchSupervisor;
     private final List<ResearchPaper> diplomaProjects = new ArrayList<>();

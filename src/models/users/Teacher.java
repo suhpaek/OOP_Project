@@ -1,15 +1,18 @@
 package models.users;
 
-import models.academic.Course;
-import enums.TeacherType;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import enums.Degree;
+import enums.TeacherType;
+import models.academic.Course;
+
 public class Teacher extends Employee {
+
     private List<Course> assignedCourses;
     private TeacherType teacherType;
+    private Degree degree;
     private List<Integer> ratingMarks;
 
     public Teacher() {
@@ -23,6 +26,18 @@ public class Teacher extends Employee {
         this.assignedCourses = new ArrayList<>();
         this.ratingMarks = new ArrayList<>();
         this.teacherType = teacherType;
+    }
+
+    public Degree getDegree() {
+        return degree;
+    }
+
+    void setDegreeByAdmin(Degree degree) {
+        this.degree = degree;
+    }
+
+    public void setDegree(Degree degree) {
+        setDegreeByAdmin(degree);
     }
 
     public List<Course> getAssignedCourses() {
@@ -57,7 +72,9 @@ public class Teacher extends Employee {
     }
 
     public double getAverageRating() {
-        if (ratingMarks.isEmpty()) return 0;
+        if (ratingMarks.isEmpty()) {
+            return 0;
+        }
         int sum = 0;
         for (int rating : ratingMarks) {
             sum += rating;

@@ -9,6 +9,8 @@ public class ConcreteUserFactory extends UserFactory {
         switch (userType) {
             case "Student":
                 return new Student();
+            case "GraduateStudent":
+                return new GraduateStudent();
             case "Teacher":
                 return new Teacher();
             case "Manager":
