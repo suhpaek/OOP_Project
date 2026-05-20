@@ -3,10 +3,10 @@ package ui.app;
 import ui.auth.AuthConsole;
 import ui.users.*;
 import data.UniversityDataStore;
+import demo.DemoDataSeeder;
 import i18n.I18n;
 import models.users.User;
 import services.auth.AuthenticationService;
-import services.system.DemoDataService;
 
 import java.util.Scanner;
 
@@ -43,7 +43,7 @@ public class ConsoleApplication {
         try {
             store.load();
             store.ensureDefaultAdmin();
-            new DemoDataService(store).seedDemoData();
+            new DemoDataSeeder(store).seedDemoData();
             store.save();
         } catch (Exception e) {
             System.out.println("Could not initialize storage: " + e.getMessage());

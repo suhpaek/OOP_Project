@@ -80,6 +80,7 @@ Admin action logs can be exported from the admin menu.
 src/
   comparators/        custom comparators
   data/               persistent data store
+  demo/               demo data seeding
   enums/              system enums
   exceptions/         custom exceptions
   i18n/               localization
