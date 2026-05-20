@@ -86,9 +86,9 @@ public class AdminConsole implements ConsoleScreen {
         System.out.println("5. " + I18n.t("admin.remove_user"));
         System.out.println("6. " + I18n.t("admin.export_logs"));
         System.out.println("7. " + I18n.t("admin.update_user"));
-        System.out.println("8. Assign graduate supervisor");
+        System.out.println("8. " + I18n.t("admin.assign_supervisor"));
         System.out.println("9. " + I18n.t("journal.title"));
-        System.out.println("10. Search");
+        System.out.println("10. " + I18n.t("search.title"));
         System.out.println("11. " + I18n.t("menu.change_language"));
         System.out.println("0. " + I18n.t("menu.logout"));
         System.out.print(I18n.t("menu.choice") + ": ");
@@ -97,11 +97,16 @@ public class AdminConsole implements ConsoleScreen {
     private void viewAllUsers() {
         List<User> users = adminService.viewAllUsers();
         if (users.isEmpty()) {
-            System.out.println("No users found.");
+            System.out.println(I18n.t("admin.no_users"));
             return;
         }
 
-        System.out.printf("%-18s %-16s %-24s %-28s %-8s%n", "Role", "Username", "Name", "Email", "Active");
+        System.out.printf("%-18s %-16s %-24s %-28s %-8s%n",
+                I18n.t("admin.table.role"),
+                I18n.t("admin.table.username"),
+                I18n.t("admin.table.name"),
+                I18n.t("admin.table.email"),
+                I18n.t("admin.table.active"));
         for (User user : users) {
             System.out.printf("%-18s %-16s %-24s %-28s %-8s%n",
                     user.getClass().getSimpleName(),
@@ -115,24 +120,24 @@ public class AdminConsole implements ConsoleScreen {
     private void createUser() {
         try {
             System.out.println();
-            System.out.println("Roles: Student, GraduateStudent, Teacher, Manager, Admin, TechSupportSpecialist");
-            System.out.print("Role: ");
+            System.out.println(I18n.t("admin.roles"));
+            System.out.print(I18n.t("prompt.role") + ": ");
             String role = scanner.nextLine().trim();
-            System.out.print("Username: ");
+            System.out.print(I18n.t("prompt.username") + ": ");
             String username = scanner.nextLine().trim();
-            System.out.print("Password: ");
+            System.out.print(I18n.t("prompt.password") + ": ");
             String password = scanner.nextLine();
-            System.out.print("First name: ");
+            System.out.print(I18n.t("prompt.first_name") + ": ");
             String firstName = scanner.nextLine().trim();
-            System.out.print("Last name: ");
+            System.out.print(I18n.t("prompt.last_name") + ": ");
             String lastName = scanner.nextLine().trim();
-            System.out.print("Email: ");
+            System.out.print(I18n.t("prompt.email") + ": ");
             String email = scanner.nextLine().trim();
 
             User user = adminService.createUser(admin, role, username, password, firstName, lastName, email);
 
             if (user instanceof models.users.Student) {
-                System.out.print("School (SITE/SG/SEOGI/SMSGT/BS/ISE/KMA/SCE/SAM/SNSS): ");
+                System.out.print(I18n.t("prompt.school") + ": ");
                 String schoolInput = scanner.nextLine().trim().toUpperCase();
                 School school = null;
                 if (!schoolInput.isBlank()) {
@@ -140,7 +145,7 @@ public class AdminConsole implements ConsoleScreen {
                 }
                 Degree degree = Degree.Bachelor;
                 if (user instanceof models.users.GraduateStudent) {
-                    System.out.print("Degree (Bachelor/Master/PhD): ");
+                    System.out.print(I18n.t("prompt.degree") + ": ");
                     String degInput = scanner.nextLine().trim();
                     if (!degInput.isBlank()) {
                         degree = Degree.valueOf(degInput);
@@ -148,91 +153,95 @@ public class AdminConsole implements ConsoleScreen {
                 }
                 adminService.updateStudentAcademicInfo(admin, (models.users.Student) user, degree, school);
             }
-            System.out.println("Created user: " + user);
+            System.out.println(I18n.t("admin.user_created", user));
         } catch (Exception e) {
-            System.out.println("Could not create user: " + e.getMessage());
+            System.out.println(I18n.t("admin.create_failed") + ": " + e.getMessage());
         }
     }
 
     private void changeUserStatus() {
         try {
-            System.out.print("Username: ");
+            System.out.print(I18n.t("prompt.username") + ": ");
             String username = scanner.nextLine().trim();
-            System.out.print("Activate user? (yes/no): ");
+            System.out.print(I18n.t("admin.activate_prompt") + ": ");
             boolean active = scanner.nextLine().trim().equalsIgnoreCase("yes");
             adminService.changeUserStatus(admin, username, active);
-            System.out.println("User status updated.");
+            System.out.println(I18n.t("admin.status_updated"));
         } catch (Exception e) {
-            System.out.println("Could not update user status: " + e.getMessage());
+            System.out.println(I18n.t("admin.status_update_failed") + ": " + e.getMessage());
         }
     }
 
     private void updateUser() {
         try {
-            System.out.print("Current username: ");
+            System.out.print(I18n.t("admin.current_username") + ": ");
             String currentUsername = scanner.nextLine().trim();
-            System.out.print("New username: ");
+            System.out.print(I18n.t("admin.new_username") + ": ");
             String newUsername = scanner.nextLine().trim();
-            System.out.print("First name: ");
+            System.out.print(I18n.t("prompt.first_name") + ": ");
             String firstName = scanner.nextLine().trim();
-            System.out.print("Last name: ");
+            System.out.print(I18n.t("prompt.last_name") + ": ");
             String lastName = scanner.nextLine().trim();
-            System.out.print("Email: ");
+            System.out.print(I18n.t("prompt.email") + ": ");
             String email = scanner.nextLine().trim();
             User user = adminService.updateUserByUsername(admin, currentUsername, newUsername, firstName, lastName, email);
-            System.out.println("Updated user: " + user);
+            System.out.println(I18n.t("admin.user_updated", user));
         } catch (Exception e) {
-            System.out.println("Could not update user: " + e.getMessage());
+            System.out.println(I18n.t("admin.user_update_failed") + ": " + e.getMessage());
         }
     }
 
     private void assignSupervisor() {
         try {
-            System.out.print("Graduate student username: ");
+            System.out.print(I18n.t("admin.grad_username") + ": ");
             String graduateUsername = scanner.nextLine().trim();
-            System.out.print("Supervisor username: ");
+            System.out.print(I18n.t("admin.supervisor_username") + ": ");
             String supervisorUsername = scanner.nextLine().trim();
             adminService.assignGraduateSupervisor(admin, graduateUsername, supervisorUsername);
-            System.out.println("Supervisor assigned.");
+            System.out.println(I18n.t("manager.supervisor_assigned"));
         } catch (Exception e) {
-            System.out.println("Could not assign supervisor: " + e.getMessage());
+            System.out.println(I18n.t("admin.assign_supervisor_failed") + ": " + e.getMessage());
         }
     }
 
     private void deleteUser() {
         try {
-            System.out.print("Username: ");
+            System.out.print(I18n.t("prompt.username") + ": ");
             String username = scanner.nextLine().trim();
             adminService.deleteUserByUsername(admin, username);
-            System.out.println("User deleted.");
+            System.out.println(I18n.t("admin.user_deleted"));
         } catch (Exception e) {
-            System.out.println("Could not delete user: " + e.getMessage());
+            System.out.println(I18n.t("admin.user_delete_failed") + ": " + e.getMessage());
         }
     }
 
     private void exportLogs() {
         try {
-            System.out.print("File name (default logs.txt): ");
+            System.out.print(I18n.t("admin.file_name_prompt") + ": ");
             String fileName = scanner.nextLine().trim();
             if (fileName.isEmpty()) {
                 fileName = "logs.txt";
             }
             adminService.exportLogs(fileName);
-            System.out.println("Logs exported to " + fileName);
+            System.out.println(I18n.t("admin.logs_exported", fileName));
         } catch (Exception e) {
-            System.out.println("Could not export logs: " + e.getMessage());
+            System.out.println(I18n.t("admin.logs_export_failed") + ": " + e.getMessage());
         }
     }
 
     private void viewLogs() {
         List<ActionLog> logs = adminService.readLogs();
         if (logs.isEmpty()) {
-            System.out.println("No logs found.");
+            System.out.println(I18n.t("admin.no_logs"));
             return;
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        System.out.printf("%-20s %-38s %-38s %s%n", "Time", "Target ID", "Actor ID", "Action");
+        System.out.printf("%-20s %-38s %-38s %s%n",
+                I18n.t("admin.table.time"),
+                I18n.t("admin.table.target_id"),
+                I18n.t("admin.table.actor_id"),
+                I18n.t("admin.table.action"));
         for (ActionLog log : logs) {
             System.out.printf("%-20s %-38s %-38s %s%n",
                     log.getCreatedAt().format(formatter),

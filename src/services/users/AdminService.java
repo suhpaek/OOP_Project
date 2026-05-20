@@ -56,6 +56,9 @@ public class AdminService {
         user.updateProfile(username, firstName, lastName, null, null);
         user.changePassword(password);
         user.updateEmail(email);
+        if (admin != null) {
+            user.selectLanguage(admin.getLanguage());
+        }
         addUser(admin, user);
         dataStore.save();
         return user;
